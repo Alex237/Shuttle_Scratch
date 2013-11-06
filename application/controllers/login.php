@@ -27,9 +27,9 @@ class Login extends CI_Controller
 
             if ($this->form_validation->run()) {
 
-                if($this->user->authentification($this->input->post('email'), $this->input->post('password'))) {
+                if($this->user->authentification($this->input->post('email'), md5($this->input->post('password')))) {
                     var_dump('connecté');
-                    var_dump($this->session->userdata());
+                    var_dump($this->session->all_userdata());
                 } else {
                     var_dump('erreur email/mot de passe');
                 }

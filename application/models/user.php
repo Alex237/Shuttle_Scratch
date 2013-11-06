@@ -37,8 +37,8 @@ class User extends CI_Model
 
         if ($query->num_rows() > 0) {
             $userdata = $query->row();
-
             $this->session->set_userdata($userdata);
+            $this->updateLoginDate();
             return true;
         } else {
             return false;
@@ -50,9 +50,7 @@ class User extends CI_Model
      * @return type
      */
     function logout() {
-        $now = new \DateTime();
-        $this->db->where($this->primary_key, $this->session->userdata($this->primary_key));
-        $this->db->update($this->table_name, array('lastloginDate' => $now->format('Y-m-d H:i:s')));
+        $this->updateLoginDate();
         $this->session->sess_destroy();
     }
 
@@ -73,6 +71,15 @@ class User extends CI_Model
     public function isUniqueEmail($email) {
         $result = $this->db->get_where('user', array('email' => $email));
         return ($result->num_rows == 0);
+    }
+    
+    /**
+     * 
+     */
+    public function updateLoginDate() {
+        $now = new \DateTime();
+        $this->db->where($this->primary_key, $this->session->userdata($this->primary_key));
+        $this->db->update($this->table_name, array('lastloginDate' => $now->format('Y-m-d H:i:s')));
     }
 
 }
