@@ -6,30 +6,71 @@ if (!defined('BASEPATH'))
 class Ticket extends CI_Controller
 {
 
-    /**
-     * 
-     */
-    public function index() {
-        $this->load->view('layout', array('content' => 'ticket/home'));
+    public function __construct() {
+        parent::__construct();
+        $this->load->library('twig');
+        $this->twig->ci_function_init();
+
+        $this->load->model('ticket_model');
     }
 
-    /**
-     * 
-     */
-    public function add() {
+    public function index() {
+        
+        $idUser = $this->session->userdata('idUser');
+        
+        $data = array(
+            'ticketAssignedToMe' => $this->ticket_model->loadTicketsOpenBy($idUser),
+            'ticketOpenByMe' => $this->ticket_model->loadTicketsAssignedTo($idUser)
+        );
 
-        /*
-         * TODO 
-         * 
-         * affichage formulaire
-         * 
-         * si post traitement formulaire
-         * -> si bon redirect
-         * -> si mauvais re-affichage formulaire + erreurs (form_valid)
-         * 
-         */
+        $this->twig->display('ticket/overview.html.twig', $data);
+    }
 
-        $this->load->view('layout', array('content' => 'ticket-add'));
+    public function create() {
+
+        $data = array(
+            'types' => $this->ticket_model->loadTicketTypes()
+        );
+
+
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+
+            $this->load->library('form_validation');
+            $this->form_validation->set_error_delimiters('<div class="input-error">', '</div>');
+
+            $this->form_validation->set_rules('title', 'Titre', 'trim|required|max_length[255]');
+            $this->form_validation->set_rules('type', 'Type', 'required');
+            $this->form_validation->set_rules('content', 'Détail', '');
+            $this->form_validation->set_rules('deadline', 'Date de fin', '');
+
+            if ($this->form_validation->run()) {
+
+                $ticket = array(
+                    'title' => $this->input->post('title'),
+                    'type' => $this->input->post('type'),
+                    'content' => $this->input->post('content'),
+                    'deadline' => $this->input->post('deadline'),
+                    'openBy' => $this->session->userdata('idUser')
+                );
+
+                if ($this->ticket_model->save($ticket)) {
+                    redirect('dashboard');
+                } else {
+                    $data['error'] = 'Identifiants incorrects';
+                }
+            }
+        }
+
+        $this->twig->display('ticket/create.html.twig', $data);
+    }
+
+    public function show($idTicket) {
+
+        $data = array(
+            'ticket' => $this->ticket_model->loadById($idTicket)
+        );
+
+        $this->twig->display('ticket/show.html.twig', $data);
     }
 
 }

@@ -28,7 +28,13 @@ h2 {
     font-size: 32px;
 }
 
-textarea { resize: none; } /* Prevents chrome from allow resize*/
+textarea {
+    resize: none; /* Prevents chrome from allow resize*/
+}
+
+label {
+    font-weight: normal;
+}
 
 .logo {
     margin-bottom: 20px;
@@ -271,24 +277,32 @@ section.well > h3 {
 
 /* Buttons
 ===========================================================*/
-.btn, .form-control {
+.btn,
+.form-control,
+.input-group-addon {
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
 }
 
-.btn-default {
+.input-group-btn .btn-default {
+    border: 1px solid #ccc;
+}
+
+.navbar-inverse .btn-default,
+#subnavbar .input-group-btn .btn-default {
     color: #d0d0d0;
     background-color: #3a3a3a;
     border-color: #636363;
 }
 
-.btn-default:hover {
+.navbar-inverse .btn-default:hover,
+#subnavbar .input-group-btn .btn-default:hover {
     color: #d0d0d0;
     background-color: #2e2e2e;
 }
 
-.input-group-btn .btn {
+#subnavbar .input-group-btn .btn {
     -webkit-transition: border-color ease-in-out .15s;
     transition: border-color ease-in-out .15s;
 }
@@ -431,7 +445,7 @@ body > footer a:hover {
     animation-duration:0.2s;
 }
 
-/* Input error
+/* Errors
 ===========================================================*/
 .input-error {
     position: relative;
@@ -453,6 +467,11 @@ body > footer a:hover {
     position: absolute;
     left: 12px;
     top:-6px;
+}
+
+.row-error {
+    margin-top: 0;
+    margin-bottom: 12px;
 }
 
 /*@media (min-width: 992px) {

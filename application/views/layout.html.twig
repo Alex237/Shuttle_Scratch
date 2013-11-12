@@ -1,0 +1,144 @@
+{% block doctype %}<!DOCTYPE html>{% endblock %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{{ title }}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ base_url() }}css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ base_url() }}css/font-awesome.fix.min.css">
+        <link rel="stylesheet" href="{{ base_url() }}css/animate.min.css">
+        <link rel="stylesheet" href="{{ base_url() }}css/my-bootstrap-theme.css">
+    </head>
+    <body>
+        
+        {% block navbar %}
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
+                        <span class="sr-only">Afficher la navigation</span>
+                        <span class="fa-reorder"></span>
+                    </button>
+                    <a class="navbar-brand"><i class="fa-rocket"></i>&nbsp;Shuttle</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navigation">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#"><i class="fa-wrench"></i>&nbsp;Préférences</a></li>
+                        <li><a href="{{ base_url() }}logout"><i class="fa-sign-out"></i>&nbsp;Quitter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% endblock %}
+
+        {% block subnavbar %}
+        <nav id="subnavbar" role="navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <ul>
+                            <li{% if navtab == 'overview' %} class="active"{% endif %}><a href="{{ base_url() }}dashboard"><i class="fa-eye"></i>Accueil</a></li>
+                            <li{% if navtab == 'history' %} class="active"{% endif %}><a href="{{ base_url() }}history"><i class="fa-clock-o"></i>Historique</a></li>
+                            <li{% if navtab == 'tickets' %} class="active"{% endif %}><a href="{{ base_url() }}tickets"><i class="fa-ticket"></i>Tickets</a></li>
+                            <li{% if navtab == 'projects' %} class="active"{% endif %}><a href="{{ base_url() }}projects"><i class="fa-folder-o"></i>Projets</a></li>
+                            <li{% if navtab == 'stats' %} class="active"{% endif %}><a href="{{ base_url() }}stats"><i class="fa-bar-chart-o"></i>Statistiques</a></li>
+                            <li{% if navtab == 'new' %} class="active"{% endif %}><a href="{{ base_url() }}ticket/new"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <form class="col-xs-12" role="search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Trouver un ticket">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-default"><i class="fa-search"></i></button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        {% endblock %}
+
+        {% block gathering %}
+        <div id="gathering">
+            <div>&nbsp;</div>
+        </div>
+        {% endblock %}
+
+        <div id="content" class="animated">
+        {% block content %}
+                <!-- content -->
+        {% endblock %}
+        </div>
+
+        {% block extras %}
+        <div id="home-demo">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-5">
+                        <h2>Titre truc</h2>
+                        <p>Suspendisse potenti. Pellentesque mi purus, sodales vitae quam quis, auctor facilisis tortor. Aliquam iaculis at libero eu consequat. Aliquam feugiat at felis eget ultricies. Maecenas accumsan, orci quis blandit facilisis, neque est mollis quam, vel molestie ante orci et augue. Nullam lectus mauris, congue laoreet malesuada sed, placerat ut lectus. Nam lobortis est eget mauris gravida suscipit. Fusce id faucibus massa.</p>
+                    </div>
+                    <div class="col-md-5">
+                        <h2>Bidule machin</h2>
+                        <p>Curabitur vel pellentesque lacus. Nam dictum vel dolor mattis consectetur. In eget nibh quis libero tincidunt rutrum. In hac habitasse platea dictumst. Donec feugiat lacus sit amet ante blandit semper. Pellentesque pretium, lacus ut accumsan pulvinar, libero mi sollicitudin eros, vel adipiscing ipsum sem at justo. Nulla molestie justo sed tortor tempus vehicula. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+        
+        {% block footer %}
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <ul>
+                            <li class="list-title">Navigation</li>
+                            <li><a href="#">Accueil</a></li>
+                            <li><a href="#">Historique</a></li>
+                            <li><a href="#">Statistiques</a></li>
+                            <li><a href="#">Mes tickets</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2">
+                        <ul>
+                            <li class="list-title">Aide</li>
+                            <li><a href="#">Faq</a></li>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2">
+                        <ul>
+                            <li class="list-title">A propos</li>
+                            <li><a href="#">Mentions légales</a></li>
+                            <li><a href="#">Fork on Github</a></li>
+                            <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap 3</a></li>
+                            <li><a href="#">Font Awesome</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-offset-2 col-md-4">
+                        <h1 class="logo"><i class="fa-rocket"></i>&nbsp;Shuttle</h1>
+                        <p>Lorem ipsum dolor sit amet consectetur acipit velit. Laborem et dolor amet apicit.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {% endblock %}
+
+        {% block scripts %}
+        <script src="{{ base_url() }}js/vendor/jquery-1.10.2.min.js"></script>
+        <script src="{{ base_url() }}js/vendor/bootstrap.min.js"></script>
+        <!--<script src="js/vendor/dynamic.js"></script>-->
+        {% endblock %}
+        </body>
+    </html>

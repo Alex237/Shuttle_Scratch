@@ -25,6 +25,8 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`User` (
   PRIMARY KEY (`idUser`) )
 ENGINE = InnoDB;
 
+CREATE UNIQUE INDEX `email_UNIQUE` ON `Shuttle`.`User` (`email` ASC) ;
+
 
 -- -----------------------------------------------------
 -- Table `Shuttle`.`TicketType`
@@ -50,13 +52,14 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`Ticket` (
   `openDate` DATETIME NULL ,
   `updateDate` DATETIME NULL ,
   `closeDate` DATETIME NULL ,
-  `percent` VARCHAR(45) NULL ,
+  `percent` INT NOT NULL DEFAULT 0 ,
   `type` INT NOT NULL ,
   `openBy` INT NOT NULL ,
   `assignedTo` INT NOT NULL ,
   `deadline` DATETIME NULL ,
   `estimatedTime` INT NULL ,
-  `Ticketcol` VARCHAR(45) NULL ,
+  `title` VARCHAR(255) NOT NULL ,
+  `content` TEXT NULL ,
   PRIMARY KEY (`idTicket`) ,
   CONSTRAINT `fk_Ticket_TicketType`
     FOREIGN KEY (`type` )

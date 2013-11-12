@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class User extends CI_Model
+class User_Model extends CI_Model
 {
 
     private $table_name = 'user';
@@ -60,7 +60,7 @@ class User extends CI_Model
      * @return type
      */
     public function save($data) {
-        return $this->db->insert('user', $data);
+        return $this->db->insert($this->table_name, $data);
     }
 
     /**
@@ -69,7 +69,7 @@ class User extends CI_Model
      * @return type
      */
     public function isUniqueEmail($email) {
-        $result = $this->db->get_where('user', array('email' => $email));
+        $result = $this->db->get_where($this->table_name, array('email' => $email));
         return ($result->num_rows == 0);
     }
     

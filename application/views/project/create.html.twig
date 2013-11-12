@@ -1,0 +1,22 @@
+{% extends "project/overview.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <section class="well">
+                <h3>Nouveau projet</h3>
+                <form role="form" method="post">
+                    <div class="form-group">
+                        <label for="name" class="control-label">Nom du projet</label>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Nouveau projet">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
