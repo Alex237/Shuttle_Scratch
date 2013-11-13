@@ -20,6 +20,19 @@ class Ticket_Model extends CI_Model
 
     /**
      * 
+     * @return array
+     */
+    public function loadAll($offset = null, $limit = null) {
+        $query = $this->db->select()
+                ->from($this->table_name)
+                ->join('user', 'user.idUser = ' . $this->table_name . '.openBy')
+                ->limit($limit, $offset);
+
+        return $query->get()->result();
+    }
+
+    /**
+     * 
      * @param int $idUser
      * @return array
      */

@@ -53,6 +53,18 @@ class User_Model extends CI_Model
         $this->updateLoginDate();
         $this->session->sess_destroy();
     }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function loadAll($offset = null, $limit = null) {
+        $query = $this->db->select()
+                ->from($this->table_name)
+                ->limit($limit, $offset);
+
+        return $query->get()->result();
+    }
 
     /**
      * 

@@ -26,8 +26,15 @@ if (!defined('BASEPATH'))
 $route['login'] = 'user/login';
 $route['register'] = 'user/register';
 $route['logout'] = 'user/logout';
+$route['settings'] = 'user/settings';
 
 $route['dashboard'] = 'dashboard/overview';
+
+$route['users'] = 'users/index';
+$route['user/new'] = 'user/create';
+$route['user/(\d+)/show'] = 'user/show/$1';
+$route['user/(\d+)/edit'] = 'user/edit/$1';
+$route['user/(\d+)/delete'] = 'user/delete/$1';
 
 $route['tickets'] = 'ticket/index';
 $route['ticket/new'] = 'ticket/create';

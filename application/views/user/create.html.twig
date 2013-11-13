@@ -1,0 +1,53 @@
+{% extends "user/overview.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <form role="form" method="post">
+            <div class="col-md-9">
+                <section class="well">
+                    <h3>Nouvel utilisateur</h3>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ set_value('email')|raw }}" placeholder="account@acme.com" maxlength="255" required>
+                            {{ form_error('email')|raw }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ set_value('firstname')|raw }}" placeholder="Prénom" maxlength="45">
+                            {{ form_error('firstname')|raw }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" id="lastname" name="lastname" value="{{ set_value('lastname')|raw }}" placeholder="Nom" maxlength="45">
+                            {{ form_error('lastname')|raw }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+
+                </section>
+            </div>
+
+            <div class="col-md-3">
+                <section class="well">
+                    <h3>Société</h3>
+                    <select></select>
+                </section>
+
+                <section class="well">
+                    <h3>Roles</h3>
+                    <div class="form-group">
+                        <select class="form-control" id="roles" name="role[]" multiple>
+                            <option value="">Client</option>
+                            <option value="">Equipe</option>
+                            <option value="">Admin</option>
+                        </select>
+                    </div>
+                </section>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
