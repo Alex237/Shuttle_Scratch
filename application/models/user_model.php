@@ -11,21 +11,27 @@ class User_Model extends CI_Model
 
     /**
      * 
-     * @return type
+     * @return boolean
      */
-    function online($role = null) {
-        
-        if ($role != null) {
-            // handle roles
-        } else {
-            return $this->session->userdata($this->primary_key);
-        }
+    function isLogged() {
+
+        return $this->session->userdata($this->primary_key);
     }
 
     /**
      * 
-     * @param type $email
-     * @param type $password
+     * @param string $role
+     * @return boolean
+     */
+    public function isGranted($role) {
+
+        return in_array($role, $this->session->userdata('roles'));
+    }
+
+    /**
+     * 
+     * @param string $email
+     * @param string $password
      * @return boolean
      */
     public function authentification($email, $password) {
@@ -37,7 +43,15 @@ class User_Model extends CI_Model
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-            $userdata = $query->row();
+            $user = $query->row();
+            $userdata = array(
+                'idUser' => $user->idUser,
+                'email' => $user->email,
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname,
+                'roles' => json_decode($user->roles)
+            );
+
             $this->session->set_userdata($userdata);
             $this->updateLoginDate();
             return true;
@@ -51,7 +65,7 @@ class User_Model extends CI_Model
      * @return type
      */
     function logout() {
-        
+
         $this->updateLoginDate();
         $this->session->sess_destroy();
     }
@@ -61,7 +75,7 @@ class User_Model extends CI_Model
      * @return array
      */
     public function loadAll($offset = null, $limit = null) {
-        
+
         $query = $this->db->select()
                 ->from($this->table_name);
 
@@ -77,7 +91,7 @@ class User_Model extends CI_Model
      * @return array
      */
     public function loadById($idUser) {
-        
+
         $query = $this->db->select()
                 ->from($this->table_name)
                 ->where($this->primary_key, $idUser);
@@ -91,11 +105,11 @@ class User_Model extends CI_Model
      * @return type
      */
     public function save($data) {
-        
+
         if (array_key_exists($this->primary_key, $data)) {
             return $this->db->update($this->table_name, $data, array($this->primary_key => $data[$this->primary_key]));
         }
-        
+
         return $this->db->insert($this->table_name, $data);
     }
 
@@ -105,7 +119,7 @@ class User_Model extends CI_Model
      * @return type
      */
     public function isUniqueEmail($email) {
-        
+
         $result = $this->db->get_where($this->table_name, array('email' => $email));
         return ($result->num_rows == 0);
     }
@@ -114,7 +128,7 @@ class User_Model extends CI_Model
      * 
      */
     public function updateLoginDate() {
-        
+
         $now = new \DateTime();
         $this->db->where($this->primary_key, $this->session->userdata($this->primary_key));
         $this->db->update($this->table_name, array('lastloginDate' => $now->format('Y-m-d H:i:s')));

@@ -112,10 +112,14 @@ class User extends CI_Controller
 
     public function login() {
 
+        if ($this->user->isLogged()) {
+            return redirect('dashboard');
+        }
+
         $this->checkUserAgent();
 
         $data = array();
-
+        
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
 
             $this->load->library('form_validation');

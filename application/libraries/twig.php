@@ -38,7 +38,7 @@ class Twig
         'set_radio',
         'form_open_multipart'
     );
-    
+
     function __construct($debug = false) {
 
         $this->CI = & get_instance();
@@ -85,6 +85,14 @@ class Twig
         foreach ($this->_CI_functions as $function) {
             $this->_twig->addFunction($function, new Twig_Function_Function($function));
         }
+
+        $CI = $this->CI;
+        $isGranted = new Twig_SimpleFunction('isGranted', function($role) use (&$CI) {
+            $CI->load->model('user_model', 'user');
+            return $CI->user->isGranted($role);
+        });
+
+        $this->_twig->addFunction($isGranted);
     }
 
 }
