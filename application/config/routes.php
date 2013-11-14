@@ -30,11 +30,17 @@ $route['settings'] = 'user/settings';
 
 $route['dashboard'] = 'dashboard/overview';
 
-$route['users'] = 'users/index';
+$route['users'] = 'user/index';
 $route['user/new'] = 'user/create';
 $route['user/(\d+)/show'] = 'user/show/$1';
 $route['user/(\d+)/edit'] = 'user/edit/$1';
 $route['user/(\d+)/delete'] = 'user/delete/$1';
+
+$route['companies'] = 'company/index';
+$route['company/new'] = 'company/create';
+$route['company/(\d+)/show'] = 'company/show/$1';
+$route['company/(\d+)/edit'] = 'company/edit/$1';
+$route['company/(\d+)/delete'] = 'company/delete/$1';
 
 $route['tickets'] = 'ticket/index';
 $route['ticket/new'] = 'ticket/create';

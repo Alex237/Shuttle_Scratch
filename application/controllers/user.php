@@ -10,12 +10,14 @@ class User extends CI_Controller
         parent::__construct();
         $this->load->library('twig');
         $this->twig->ci_function_init();
+
+        $this->load->model('user_model', 'user');
     }
 
     public function index() {
 
-        $this->twig->display('users.html.twig', array(
-            'users' => $this->user_model->loadAll()
+        $this->twig->display('user/users.html.twig', array(
+            'users' => $this->user->loadAll()
         ));
     }
 
@@ -26,7 +28,7 @@ class User extends CI_Controller
             $this->load->library('form_validation');
             $this->form_validation->set_error_delimiters('<div class="input-error">', '</div>');
 
-            $this->form_validation->set_rules('company', 'Société', 'trim|required|strtolower|max_length[255]');
+            //$this->form_validation->set_rules('company', 'Société', 'trim|required|strtolower|max_length[255]');
             $this->form_validation->set_rules('email', 'Email', 'trim|required|strtolower|valid_email|callback_uniqueEmail');
             $this->form_validation->set_rules('password', 'Mot de passe', 'trim|required');
             $this->form_validation->set_rules('confirmation', 'Confirmation', 'required|matches[password]');
@@ -45,7 +47,7 @@ class User extends CI_Controller
                     'lastname' => $this->input->post('lastname')
                 );
 
-                if ($this->user_model->save($data)) {
+                if ($this->user->save($data)) {
                     echo 'enregistré';
                     return true;
                 } else {
@@ -60,19 +62,52 @@ class User extends CI_Controller
 
     public function show($idUser) {
 
-        $this->twig->display('user/create.html.twig', array(
-            'user' => $this->user_model->loadById($idUser)
+        $this->twig->display('user/show.html.twig', array(
+            'user' => $this->user->loadById($idUser)
         ));
     }
 
     public function edit($idUser) {
 
-        //
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+
+            $this->load->library('form_validation');
+            $this->form_validation->set_error_delimiters('<div class="input-error">', '</div>');
+
+            //$this->form_validation->set_rules('company', 'Société', 'trim|required|strtolower|max_length[255]');
+            //$this->form_validation->set_rules('email', 'Email', 'trim|required|strtolower|valid_email|callback_uniqueEmail');
+            $this->form_validation->set_rules('firstname', 'Prenom', 'max_length[45]');
+            $this->form_validation->set_rules('lastname', 'Nom', 'max_length[45]');
+            $this->form_validation->set_rules('roles[]', 'Roles', '');
+
+            if ($this->form_validation->run()) {
+
+                $data = array(
+                    'idUser' => $idUser,
+                    'company' => $this->input->post('company'),
+                    'firstname' => $this->input->post('firstname'),
+                    'lastname' => $this->input->post('lastname'),
+                    'roles' => json_encode($this->input->post('roles'))
+                );
+
+                if ($this->user->save($data)) {
+                    echo 'sauvegardé';
+                    return true;
+                } else {
+                    echo 'erreur à la sauvegarde';
+                    return false;
+                }
+            }
+        }
+
+        $this->twig->display('user/edit.html.twig', array(
+            'user' => $this->user->loadById($idUser)
+        ));
     }
 
     public function delete($idUser) {
 
-        $this->user_model->delete($idUser);
+        $this->user->delete($idUser);
     }
 
     public function login() {
@@ -92,9 +127,9 @@ class User extends CI_Controller
             if ($this->form_validation->run()) {
 
                 $email = $this->input->post('email');
-                $password = md5($this->input->post('password'));
+                $password = md5($this->input->post('password') . $this->input->post('email'));
 
-                if ($this->user_model->authentification($email, $password)) {
+                if ($this->user->authentification($email, $password)) {
                     redirect('dashboard');
                 } else {
                     $data['error'] = 'Identifiants incorrects';
@@ -107,7 +142,7 @@ class User extends CI_Controller
 
     public function logout() {
 
-        $this->user_model->logout();
+        $this->user->logout();
         redirect('login');
     }
 
@@ -118,7 +153,7 @@ class User extends CI_Controller
             $this->load->library('form_validation');
             $this->form_validation->set_error_delimiters('<div class="input-error">', '</div>');
 
-            $this->form_validation->set_rules('company', 'Société', 'trim|required|strtolower|max_length[255]');
+            //$this->form_validation->set_rules('company', 'Société', 'trim|required|strtolower|max_length[255]');
             $this->form_validation->set_rules('email', 'Email', 'trim|required|strtolower|valid_email|callback_uniqueEmail');
             $this->form_validation->set_rules('password', 'Mot de passe', 'trim|required');
             $this->form_validation->set_rules('confirmation', 'Confirmation', 'required|matches[password]');
@@ -127,13 +162,13 @@ class User extends CI_Controller
 
                 $now = new \DateTime();
                 $data = array(
-                    'company' => $this->input->post('company'),
+                    //'company' => $this->input->post('company'),
                     'email' => $this->input->post('email'),
-                    'password' => md5($this->input->post('password')),
+                    'password' => md5($this->input->post('password') . $this->input->post('email')),
                     'registerDate' => $now->format('Y-m-d H:i:s'),
                 );
 
-                if ($this->user_model->save($data)) {
+                if ($this->user->save($data)) {
                     echo 'enregistré';
                     return true;
                 } else {
@@ -159,7 +194,7 @@ class User extends CI_Controller
     public function uniqueEmail($email) {
 
         $this->form_validation->set_message('uniqueEmail', 'Un compte existe déjà pour cet Email');
-        return $this->user_model->isUniqueEmail($email);
+        return $this->user->isUniqueEmail($email);
     }
 
 }

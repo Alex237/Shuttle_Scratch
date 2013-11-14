@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <section class="well">
                 <h3>Mes tickets</h3>
                 {% for ticket in ticketAssignedToMe %}
@@ -22,10 +22,8 @@
 
             </section>
         </div>
-        <div class="col-md-4">
-            <section class="well">
-                <h3>Mes projets</h3>
-            </section>
+        <div class="col-md-3">
+            <a class="btn btn-lg btn-block btn-primary" href="{{ base_url() }}ticket/new">Ouvrir un ticket</a>
         </div>
     </div>
 </div>

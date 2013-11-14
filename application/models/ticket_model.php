@@ -27,7 +27,11 @@ class Ticket_Model extends CI_Model
                 ->from($this->table_name)
                 ->join('user', 'user.idUser = ' . $this->table_name . '.openBy')
                 ->limit($limit, $offset);
-
+        
+        if($limit != null) {
+            $this->db->limit($limit, $offset);
+        }
+        
         return $query->get()->result();
     }
 

@@ -1,0 +1,28 @@
+{% extends "layout.html.twig" %}
+
+{% set navtab = 'groups' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <section class="well">
+                <h3>Ajouter une société</h3>
+                <form></form>
+            </section>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <section class="well">
+                <h3>Les Sociétés</h3>
+                {% for company in companies %}
+                <p>{{ company.name}}</p>
+                {% else %}
+                <div class="alert alert-warning">Aucune société reférencée</div>
+                {% endfor %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

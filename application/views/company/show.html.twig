@@ -1,0 +1,20 @@
+{% extends "ticket/overview.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section class="well">
+                <h3>#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</h3>
+                <p>ouvert par {{ ticket.email }} chez {{ ticket.company }}
+                <p>{{ ticket.content }}</p>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="well">
+                <h3>Mes projets</h3>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

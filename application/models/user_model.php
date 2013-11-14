@@ -14,6 +14,7 @@ class User_Model extends CI_Model
      * @return type
      */
     function online($role = null) {
+        
         if ($role != null) {
             // handle roles
         } else {
@@ -50,20 +51,38 @@ class User_Model extends CI_Model
      * @return type
      */
     function logout() {
+        
         $this->updateLoginDate();
         $this->session->sess_destroy();
     }
-    
+
     /**
      * 
      * @return array
      */
     public function loadAll($offset = null, $limit = null) {
+        
         $query = $this->db->select()
-                ->from($this->table_name)
-                ->limit($limit, $offset);
+                ->from($this->table_name);
+
+        if ($limit != null) {
+            $this->db->limit($limit, $offset);
+        }
 
         return $query->get()->result();
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function loadById($idUser) {
+        
+        $query = $this->db->select()
+                ->from($this->table_name)
+                ->where($this->primary_key, $idUser);
+
+        return $query->get()->row();
     }
 
     /**
@@ -72,6 +91,11 @@ class User_Model extends CI_Model
      * @return type
      */
     public function save($data) {
+        
+        if (array_key_exists($this->primary_key, $data)) {
+            return $this->db->update($this->table_name, $data, array($this->primary_key => $data[$this->primary_key]));
+        }
+        
         return $this->db->insert($this->table_name, $data);
     }
 
@@ -81,14 +105,16 @@ class User_Model extends CI_Model
      * @return type
      */
     public function isUniqueEmail($email) {
+        
         $result = $this->db->get_where($this->table_name, array('email' => $email));
         return ($result->num_rows == 0);
     }
-    
+
     /**
      * 
      */
     public function updateLoginDate() {
+        
         $now = new \DateTime();
         $this->db->where($this->primary_key, $this->session->userdata($this->primary_key));
         $this->db->update($this->table_name, array('lastloginDate' => $now->format('Y-m-d H:i:s')));

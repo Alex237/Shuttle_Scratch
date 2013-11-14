@@ -45,9 +45,9 @@ label {
 section.well {
     background: #f9f9f9;
     border: 1px solid #d5d5d5;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
     -webkit-box-shadow: none;
     box-shadow: none;
 }

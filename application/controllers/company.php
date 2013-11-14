@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Ticket extends CI_Controller
+class Company extends CI_Controller
 {
 
     public function __construct() {
@@ -11,27 +11,19 @@ class Ticket extends CI_Controller
         $this->load->library('twig');
         $this->twig->ci_function_init();
 
-        $this->load->model('ticket_model', 'ticket');
+        $this->load->model('company_model', 'company');
     }
 
     public function index() {
         
-        $idUser = $this->session->userdata('idUser');
-        
         $data = array(
-            'ticketAssignedToMe' => $this->ticket->loadTicketsOpenBy($idUser),
-            'ticketOpenByMe' => $this->ticket->loadTicketsAssignedTo($idUser)
+            'companies' => $this->company_model->loadAll()
         );
-
-        $this->twig->display('ticket/overview.html.twig', $data);
+        
+        $this->twig->display('company/overview.html.twig', $data);
     }
 
     public function create() {
-
-        $data = array(
-            'types' => $this->ticket->loadTicketTypes()
-        );
-
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
 
@@ -53,7 +45,7 @@ class Ticket extends CI_Controller
                     'openBy' => $this->session->userdata('idUser')
                 );
 
-                if ($this->ticket->save($ticket)) {
+                if ($this->ticket_model->save($ticket)) {
                     redirect('dashboard');
                 } else {
                     $data['error'] = 'Identifiants incorrects';
@@ -67,7 +59,7 @@ class Ticket extends CI_Controller
     public function show($idTicket) {
 
         $data = array(
-            'ticket' => $this->ticket->loadById($idTicket)
+            'ticket' => $this->ticket_model->loadById($idTicket)
         );
 
         $this->twig->display('ticket/show.html.twig', $data);

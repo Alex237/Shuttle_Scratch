@@ -11,7 +11,7 @@ class Project extends CI_Controller
         $this->load->library('twig');
         $this->twig->ci_function_init();
 
-        $this->load->model('project_model');
+        $this->load->model('project_model', 'project');
     }
 
     public function index() {
@@ -39,7 +39,7 @@ class Project extends CI_Controller
                     'deadline' => $this->input->post('deadline')
                 );
 
-                if ($this->project_model->save($project)) {
+                if ($this->project->save($project)) {
                     redirect('dashboard');
                 } else {
                     $data['error'] = 'Une erreur est survenue lors de la création du projet';

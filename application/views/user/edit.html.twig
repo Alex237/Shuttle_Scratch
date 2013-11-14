@@ -1,0 +1,47 @@
+{% extends "user/users.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <section class="well">
+                <h3>Modifier un utilisateur</h3>
+                <form id="edit-user" role="form" method="post"> 
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ set_value('email', user.email)|raw }}" placeholder="account@acme.com" maxlength="255" disabled>
+                            {{ form_error('email')|raw }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="firstname">Prénom</label>
+                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ set_value('firstname', user.firstname)|raw }}" placeholder="Prénom" maxlength="46">
+                            {{ form_error('firstname')|raw }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="lastname">Nom</label>
+                            <input type="text" class="form-control" id="lastname" name="lastname" value="{{ set_value('lastname', user.lastname)|raw }}" placeholder="Nom" maxlength="45">
+                            {{ form_error('lastname')|raw }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="roles">Roles</label>
+                            <select class="form-control" id="roles" name="roles[]" multiple>
+                                <option value="client" {{ set_select('roles[]', 'client') }}>Client</option>
+                                <option value="team" {{ set_select('roles[]', 'team') }}>Equipe</option>
+                                <option value="admin" {{ set_select('roles[]', 'admin') }}>Admin</option>
+                            </select>
+                            {{ form_error('roles[]')|raw }}
+                        </div>
+                    </div>
+            </section>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-lg btn-block btn-primary">Sauvegarder</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

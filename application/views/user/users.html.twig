@@ -1,0 +1,33 @@
+{% extends "layout.html.twig" %}
+
+{% set navtab = 'users' %}
+
+{% block content %}
+<div class="container">
+    <div class="col-xs-12">
+        <section class="well">
+            <h3>Utilisateurs</h3>
+            {% if users %}
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <tr>
+                        <th width="20"><input type="checkbox"></th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                {% for user in users %}
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="{{ base_url() }}user/{{ user.idUser }}/show">{{ user.email }}</a></td>
+                        <td><a href="{{ base_url() }}user/{{ user.idUser }}/edit"><i class="fa-edit"></i></a></td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-warning">Aucun utilisateur</div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}
