@@ -24,8 +24,11 @@ class Tickets extends BaseController {
     public function index() {
         $this->model->init();
         $ticketList = $this->model->loadAllTickets();
+        $this->model->flush();
+        $totalTicket = $this->model->countAllTickets();
         $data = array(
-            'ticketList' => $ticketList
+            'ticketList' => $ticketList,
+            'totalTickete' => $totalTicket
         );
         $this->model->close();
         $this->twig->display('tickets/overview.html.twig', $data);
@@ -108,12 +111,33 @@ class Tickets extends BaseController {
     public function show($idTicket) {
         $this->model->init();
         $tickeData = $this->model->loadById($idTicket);
-        $next = $idTicket + 1;
-        $previous = $idTicket - 1;
+        
         $this->model->flush();
-        $nextTicket = $this->model->loadById($next);
+        $lastId = $this->model->getLastId();
+        $previous = $next = $idTicket;
+        do {
+            $next = $next + 1;
+            if ($next <= $lastId['idTicket']) {
+                $this->model->flush();
+                $nextTicket = $this->model->loadById($next);
+            }  else {
+                $nextTicket = null ;
+                break;
+            }
+        } while (($nextTicket == FALSE) && $next <= $lastId['idTicket']);
+        
         $this->model->flush();
-        $previousTicket = $this->model->loadById($previous);
+        do {
+            $previous = $previous - 1;
+            if (($previous > 1) && ($previous <= $lastId['idTicket'])) {
+                $this->model->flush();
+                $previousTicket = $this->model->loadById($previous);
+            }  else {
+                $previousTicket = null ;
+                break;
+            }
+        } while (($previousTicket == FALSE) && ($previous > 1) && ($previous <= $lastId['idTicket']));
+        
         if ($tickeData) {
             $data = array(
                 'action' => 'close',
@@ -190,6 +214,31 @@ class Tickets extends BaseController {
      */
 
     public function edit($idTicket) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
+            $data = array(
+                'closeDate' => date('Y-m-d')
+            );
+            $this->model->init();
+            if ($this->model->closeTicket($idTicket)) {
+                $msg = 'Le ticket numéros : ' . $idTicket . ' a bien été modifié';
+                $data = array(
+                    'action' => 'edit',
+                    'view' => 'tickets',
+                    'msg' => $msg
+                );
+                $this->model->close();
+                $this->twig->display('info/msg.success.request.twig', $data);
+            } else {
+                $msg = "Le ticket numéros : " . $idTicket . " n'a pas pu être modifié";
+                $data = array(
+                    'action' => 'Changement de status',
+                    'view' => 'tickets',
+                    'msg' => $msg
+                );
+                $this->twig->display('info/msg.failure.request.twig', $data);
+            }
+            exit;
+        }
         $this->model->init();
         $types = $this->model->loadTicketTypes();
         $this->model->flush();
@@ -289,6 +338,7 @@ class Tickets extends BaseController {
                 $data = array(
                     'action' => 'reopen',
                     'view' => 'tickets',
+                    'id' => $idTicket,
                     'msg' => $msg
                 );
                 $this->model->close();
@@ -298,7 +348,8 @@ class Tickets extends BaseController {
                 $data = array(
                     'action' => 'Changement de status',
                     'view' => 'tickets',
-                    'msg' => $msg
+                    'msg' => $msg,
+                    'id' => $idTicket
                 );
                 $this->twig->display('info/msg.failure.request.twig', $data);
             }

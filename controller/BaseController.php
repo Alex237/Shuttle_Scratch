@@ -128,6 +128,10 @@ abstract class BaseController
      */
     protected function restrict($role = null) {
         if (!$this->session->isGranted($role)) {
+            if (!$this->session->existSessionData()) {
+                 header('location: http://' . $_SERVER['SERVER_NAME'] . '/login');
+                 exit;
+            }
             $this->session->addFlash('<div class="alert alert-danger"><i class="fa-minus-circle"></i>&nbsp;Cette action est interdite !</div>', 'danger');
             $this->redirect($_SERVER['HTTP_REFERER']);
         }
@@ -207,8 +211,9 @@ abstract class BaseController
                     }
                 });
 
-        $functions[] = new Twig_SimpleFunction('isGranted', function() {
-                    return true;
+        $functions[] = new Twig_SimpleFunction('isGranted', function($roles) {
+                    $sessiondata = $this->session->getUserData();
+					return in_array($roles, $sessiondata["roles"]);
                 });
 
         foreach ($functions as $function) {

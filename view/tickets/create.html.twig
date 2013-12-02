@@ -88,7 +88,7 @@
                     <h3><b>Projet</b></h3>
                     <label for="type"><b>Projet associé</b></label>
                     <select class="form-control" id="type" name="idProjet" {{ setValue('idProjet') }}>
-                        <option value="">Choisir un projet</option>
+                        <option value="0">Choisir un projet</option>
 						{% for projet in projets %}
                         <option value="{{ projet.idProject }}" {{ set_select('idProjet', projet.idProject) }}>{{ projet.name|capitalize }}</option>
 						{% endfor %}
@@ -101,7 +101,7 @@
                     <div class="form-group">
                         <label for="exampleInputPassword1"><b>Assigné à</b></label>
                         <select class="form-control" id="exampleInputPassword1" name="assignedTo" {{ setValue('assignedTo') }}>
-                            <option value="">Choisir un membre d'équipe</option>
+                            <option value="0">Choisir un membre d'équipe</option>
 							{% for teamMember in teams %}
                             <option value="{{ teamMember.idUser }}" {{ set_select('assignedTo', teamMember.idUser) }}>{{ [teamMember.lastname|capitalize, teamMember.firstname|capitalize]|join(' ') }}</option>
 							{% endfor %}
