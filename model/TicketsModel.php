@@ -42,7 +42,7 @@ class TicketsModel extends BaseModel {
                         ->join('user u', 'u.idUser = ' . $this->table . '.openBy')
                         ->join('ticketstatus ts', 'ts.idStatus = ' . $this->table . '.status')
                         ->join('user u2', 'u2.idUser = ' . $this->table . '.assignedTo')
-                        ->orderBy(array('idTicket'))
+                        ->orderBy(array('idTicket'), 'DESC')
                         ->limit($offset, $limit)->buildQuery();
 
         $result = $this->db->prepare($query);
@@ -181,6 +181,37 @@ class TicketsModel extends BaseModel {
         $insert = $this->db->prepare($sql);
 
         return $insert->execute($data);
+    }/**
+     * 
+     * @param type $offset
+     * @param type $limit
+     */
+    public function countAllTickets() {
+        $query = $this->select(array('COUNT(*)'))
+                        ->from(array($this->table))
+                        ->buildQuery();
+
+        $result = $this->db->query($query);
+        return $result->fetchColumn();
+    }
+    
+    public function getLastId() {
+        $query = $this->select(array('idTicket'))
+                ->from(array($this->table))
+                ->orderBy(array('idTicket'), 'DESC')
+                ->limit(0, 1)->buildQuery();//SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+        $result = $this->db->query($query);
+        return $result->fetch();
+        
+    }
+    public function getFirstId() {
+        $query = $this->select(array('idTicket'))
+                ->from(array($this->table))
+                ->orderBy(array('idTicket'))
+                ->limit(0, 1)->buildQuery();//SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+        $result = $this->db->query($query);
+        return $result->fetch();
+        
     }
 
 }
