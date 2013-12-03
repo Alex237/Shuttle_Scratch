@@ -11,26 +11,21 @@ class Validator
 {
 
     /**
-     * The validator instance
+     * The list of rules to pass
      * 
-     * @var \Validator
-     */
-    private static $instance = null;
-
-    /**
-     * The validation rules
      * @var array
      */
     private $rules = array();
 
     /**
-     * The validation errors 
+     * The list of found errors
+     * 
      * @var array
      */
     private $errors = array();
 
     /**
-     * The validation errors messages
+     * The lexicon of errors messages
      * 
      * @var array
      */
@@ -40,7 +35,7 @@ class Validator
      * Construct
      * 
      */
-    private function __construct() {
+    public function __construct() {
         $xml = new \DOMDocument;
         $xml->load('./config/errors.xml');
 
@@ -49,19 +44,6 @@ class Validator
         foreach ($errors as $error) {
             $this->messages[$error->getAttribute('rule')] = $error->getAttribute('message');
         }
-    }
-
-    /**
-     * Get the unique validator instance
-     * 
-     * @return \Validator
-     */
-    public static function getInstance() {
-
-        if (is_null(self::$instance)) {
-            self::$instance = new Validator();
-        }
-        return self::$instance;
     }
 
     /**
@@ -78,7 +60,7 @@ class Validator
     }
 
     /**
-     * Remove a rule from the validator
+     * Remove a field from the validator
      * 
      * @param string $field The targetted field
      * @return \Validator The validator instance
@@ -131,11 +113,15 @@ class Validator
             } elseif (in_array('required', $rules)) {
                 $this->addError('required', $field);
             } else {
-				
-			}
+                
+            }
         }
 
-        return empty($this->errors);
+        if(empty($this->errors)) {
+            return TRUE;
+        } else {
+            
+        }
     }
 
     /**
@@ -312,21 +298,6 @@ class Validator
     }
 
     /**
-     * Check if email address is already taken
-     * 
-     * @param string $value The email address
-     * @return boolean
-     */
-    private function uniqueEmail($value) {
-
-        require_once './model/UserModel.php';
-        $model = new UserModel();
-        $model->init();
-        
-        return !$model->existEmail($value);
-    }
-
-    /**
      * Check if the value match another field
      * 
      * @param mixed $value The field value
@@ -363,7 +334,7 @@ class Validator
      * @param type $param The lenght to match
      * @return boolean
      */
-    private function maxlength($value, $param) {
+    private function maxLength($value, $param) {
         if (is_string($value) and is_numeric($param)) {
             return strlen($value) <= $param;
         } else {
@@ -378,20 +349,22 @@ class Validator
      * @param type $param The lenght to match
      * @return boolean
      */
-    private function minlength($value, $param) {
+    private function minLength($value, $param) {
         if (is_string($value) and is_numeric($param)) {
             return strlen($value) >= $param;
         } else {
             return FALSE;
         }
     }
-	
-	private function validdate ($value, $param) {
-		return preg_match('#^\d{2}\/\d{2}\/\d{4}$#', $value);
-	}
-	
-	public function getRules() {
-		return $this->rules;
-	}
+
+    /**
+     * Check string for a correct french d/m/Y date format
+     * 
+     * @param string $value The field value
+     * @return boolean
+     */
+    private function validDate($value) {
+        return preg_match('#^\d{2}\/\d{2}\/\d{4}$#', $value);
+    }
 
 }

@@ -1,6 +1,8 @@
 <?php
 
 require_once './controller/BaseController.php';
+require_once './core/validator.php';
+require_once './core/mailer.php';
 
 /**
  * The user controller
@@ -11,7 +13,7 @@ class User extends BaseController
 {
 
     /**
-     * Constructor
+     * Construct
      * 
      */
     public function __construct() {
@@ -19,12 +21,12 @@ class User extends BaseController
     }
 
     /**
-     * The controller index
-     * Load default view
+     * Index
+     * 
      */
     public function index() {
 
-        $this->restrict();
+        $this->restrict('team');
         $this->model->init();
 
         $this->twig->display('user/users.html.twig', array(
@@ -35,19 +37,18 @@ class User extends BaseController
     }
 
     /**
-     * The user login action
+     * Login
      * 
      */
     public function login() {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
-            require_once './core/validator.php';
-            $validator = Validator::getInstance();
-
-            $validator->addRules('email', 'required|email')
+            
+            $this->validator = new Validator();
+            $this->validator->addRules('email', 'required|email')
                     ->addRules('password', 'required');
 
-            if ($validator->run()) {
+            if ($this->validator->run()) {
 
                 $email = strtolower($_POST['email']);
                 $password = md5($_POST['password'] . $email);
@@ -63,16 +64,13 @@ class User extends BaseController
 
                         $this->model->close();
                         $this->redirect('/dashboard');
-                        
                     } elseif ($user['state'] == 0) {
-                        $validator->addCustomError('credentials', 'Accèder à votre boîte mail pour activer ce compte');
-                        
+                        $this->validator->addCustomError('credentials', 'Accèder à votre boîte mail pour activer ce compte');
                     } elseif ($user['state'] >= 2) {
-                        $validator->addCustomError('credentials', 'Ce compte n\'est plus autorisé à se connecter');
-                        
+                        $this->validator->addCustomError('credentials', 'Ce compte n\'est plus autorisé à se connecter');
                     }
                 } else {
-                    $validator->addCustomError('credentials', 'Identifiants incorrects');
+                    $this->validator->addCustomError('credentials', 'Identifiants incorrects');
                 }
             }
         }
@@ -89,7 +87,7 @@ class User extends BaseController
      */
     public function show($idUser) {
 
-        $this->restrict();
+        $this->restrict('team');
         $this->model->init();
 
         $user = $this->model->loadById($idUser);
@@ -113,11 +111,6 @@ class User extends BaseController
 
         $this->restrict('admin');
 
-//        $userdata = $this->session->getUserData();
-//        if($idUser == $userdata['idUser']) {
-//            $this->alert('Vous modifiez votre propre compte !', 'warning');
-//        }
-
         $this->model->init();
 
         $user = $this->model->loadById($idUser);
@@ -128,13 +121,11 @@ class User extends BaseController
         // test d'égalité uri<->form pour plus de sécurité
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idUser'] == $idUser) {
 
-            require_once './core/validator.php';
-            $validator = Validator::getInstance();
-
-            $validator->addRules('firstname', 'maxlength[45]')
+            $this->validator = new Validator();
+            $this->validator->addRules('firstname', 'maxlength[45]')
                     ->addRules('lastname', 'maxlength[45]');
 
-            if ($validator->run()) {
+            if ($this->validator->run()) {
 
                 $data = array(
                     'idUser' => $idUser,
@@ -165,7 +156,7 @@ class User extends BaseController
      */
     public function delete($idUser) {
 
-        $this->restrict();
+        $this->restrict('admin');
         $this->model->init();
         $this->model->deleteById($idUser);
         $this->model->close();
@@ -173,95 +164,123 @@ class User extends BaseController
     }
 
     /**
+     * Add a new user
      * 
      */
     public function add() {
 
-        $this->restrict();
+        $this->restrict('admin');
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
 
-            require_once './core/validator.php';
-            $validator = Validator::getInstance();
-
-            $validator->addRules('firstname', 'maxlength[45]')
+            $this->validator = new Validator();
+            $this->validator->addRules('firstname', 'maxlength[45]')
                     ->addRules('lastname', 'maxlength[45]')
                     ->addRules('email', 'required|email|maxlength[255]');
 
-            if ($validator->run()) {
+            if ($this->validator->run()) {
 
-                $data = array(
-                    'email' => ucwords(strtolower($_POST['email'])),
-                    'password' => $this->generatePassword(),
-                    'firstname' => ucwords(strtolower($_POST['firstname'])),
-                    'lastname' => strtoupper($_POST['lastname']),
-                    'roles' => json_encode($_POST['roles']),
-                    'company' => $_POST['company']
-                );
+                $email = strtolower($_POST['email']);
+                $this->model->init();
+                $user = $this->model->loadByEmail($email);
 
-                if ($this->model->save($data)) {
-                    //success
+                if (!empty($user)) {
+                    $this->validator->addCustomError('email', 'Cette adresse email est déjà allouée');
                 } else {
-                    //erreur
+
+                    $now = new \DateTime();
+                    $password = $this->model->generatePassword();
+                    $token = md5(uniqid($email));
+                    $user = array(
+                        'email' => $email,
+                        'password' => md5($password . $email),
+                        'token' => $token,
+                        'firstname' => ucwords(strtolower($_POST['firstname'])),
+                        'lastname' => strtoupper($_POST['lastname']),
+                        'roles' => isset($_POST['roles']) ? json_encode($_POST['roles']) : array(),
+                        'registerDate' => $now->format('Y-m-d H:i:s')
+                    );
+
+                    if ($this->model->save($user)) {
+
+                        $mailer = new Mailer();
+                        $user['password'] = $password;
+                        $mailer->mailUserCreate($user, $this->twig);
+
+                        $this->session->addFlash('Utilisateur ajouté', 'success');
+                        $this->redirect('/user');
+                    } else {
+                        $this->alert('Impossible d\'ajouter un utilisateur', 'danger');
+                    }
                 }
+
+                $this->model->close();
             }
         }
 
-        $this->twig->display('user/create.html.twig');
+        $this->twig->display('user/add.html.twig');
     }
 
     /**
+     * Logout the user
      * 
      */
     public function logout() {
 
         $this->session->endUserSession();
-
         $this->redirect('/login');
     }
 
     /**
+     * User registration
      * 
      */
     public function register() {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
 
-            require_once './core/validator.php';
-            $validator = Validator::getInstance();
-
-            $validator->addRules('email', 'required|email|maxlength[255]|uniqueEmail')
+            $this->validator = new Validator();
+            $this->validator->addRules('email', 'required|email|maxlength[255]')
                     ->addRules('password', 'required|maxlength[24]')
                     ->addRules('confirm', 'match[password]');
 
-            if ($validator->run()) {
-
-                $email = strtolower($_POST['email']);
-                $password = md5($_POST['password'] . $email);
-                $token = md5(uniqid($email));
+            if ($this->validator->run()) {
 
                 $this->model->init();
 
-                $user = array(
-                    'email' => $email,
-                    'password' => $password,
-                    'token' => $token
-                );
+                $email = strtolower($_POST['email']);
+                $user = $this->model->loadByEmail($email);
+                if (empty($user)) {
 
-                if ($this->model->save($user)) {
-
-                    require_once './core/mailer.php';
-                    $mailer = new Mailer();
-                    $mailer->mailRegister($email, $token, $this->twig);
-
-                    $this->twig->display('info/registerSuccess.html.twig', array(
-                        'email' => $email
-                    ));
+                    $this->validator->addCustomError('email', 'Cette adresse email est déjà allouée');
                 } else {
-                    $this->twig->display('info/registerFailure.html.twig');
-                }
 
-                exit;
+                    $password = md5($_POST['password'] . $email);
+                    $token = md5(uniqid($email));
+                    $now = new \DateTime();
+
+                    $user = array(
+                        'email' => $email,
+                        'password' => $password,
+                        'token' => $token,
+                        'roles' => array(),
+                        'registerDate' => $now->format('Y-m-d H:i:s')
+                    );
+
+                    if ($this->model->save($user)) {
+
+                        $mailer = new Mailer();
+                        $mailer->mailUserRegister($user, $this->twig);
+
+                        $this->twig->display('info/registerSuccess.html.twig', array(
+                            'email' => $email
+                        ));
+                    } else {
+                        $this->twig->display('info/registerFailure.html.twig');
+                    }
+
+                    exit;
+                }
             }
         }
 
@@ -269,30 +288,39 @@ class User extends BaseController
     }
 
     /**
+     * Activate a user account from mail token
      * 
-     * @param type $email
-     * @param type $token
+     * @param string $email The user email address
+     * @param string $token The user mail token
      */
     public function activate($email, $token) {
         $this->model->init();
-        
-        if($this->model->activate($email, $token)) {
-            
+
+        if ($this->model->activate($email, $token)) {
+
             $this->twig->display('info/msg.success.request.twig', array(
                 'view' => 'login',
                 'msg' => 'Votre compte a bien été activé.'
             ));
-            
         } else {
-            
+
             $this->twig->display('info/msg.failure.request.twig', array(
                 'view' => 'login',
                 'msg' => 'Impossible d\'activer ce compte.'
             ));
-            
         }
-        
+
         $this->model->close();
+    }
+
+    /**
+     * Allow user to recover password
+     * 
+     * @param string $email The user email address
+     * @param string $token The user mail token
+     */
+    public function recover() {
+        
     }
 
 }

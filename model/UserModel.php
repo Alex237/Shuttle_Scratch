@@ -12,6 +12,7 @@ class UserModel extends BaseModel
 {
 
     /**
+     * Contruct
      * 
      */
     public function __construct() {
@@ -57,38 +58,29 @@ class UserModel extends BaseModel
     }
 
     /**
+     * Check if an email exists
      * 
-     * @param type $email
-     * @return type
+     * @param string $email The email address
+     * @return boolean
      */
-    public function existEmail($email) {
+    public function loadByEmail($email) {
 
         $sql = $this->select(array('email'))
                 ->where(array('email = :email'))
                 ->buildQuery();
         $existeEmail = $this->db->prepare($sql);
         $existeEmail->execute(array(':email' => $email));
-
+        
         return $existeEmail->fetch();
     }
-	public function loadUserData($idUser) {
-        $sql = $this->select(array('idUser', 'email', 'firstname', 'lastname', 'roles', 'state', 'company'))
-                ->where(array('idUser = :idUser'))
-                ->buildQuery();
-        $auth = $this->db->prepare($sql);
-        $auth->execute(array(':idUser' => $idUser));
 
-        return $auth->fetch();
+    /**
+     * Generate a random password string
+     * 
+     * @param type $lenght
+     */
+    public function generatePassword($length = 8) {
+        return substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, $length);
     }
-	
-	/**
-	 * 
-	 * @return array
-	 */
-	public function loadUserList() {
-		$query = $this->select()->from(array('user'))->buildQuery();
-		$result = $this->db->prepare($query);
-		$result->execute();
-		return $result->fetchAll();
-	}
+
 }

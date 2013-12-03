@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{{ domain() }}asset/css/bootstrap.min.css">
         <link rel="stylesheet" href="{{ domain() }}asset/css/font-awesome.fix.min.css">
         <link rel="stylesheet" href="{{ domain() }}asset/css/shuttle-theme.css">
+        <link rel="stylesheet" href="{{ domain() }}asset/css/datepicker.css">
     </head>
     <body>
 
@@ -24,6 +25,7 @@
                 </div>
                 <div class="collapse navbar-collapse" id="navigation">
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ domain() }}notifications"><span class="badge badge-active">4</span>&nbsp;Notifications</a></li>
                         <li><a href="{{ domain() }}settings"><i class="fa-wrench"></i>&nbsp;Préférences</a></li>
                         <li><a href="{{ domain() }}logout"><i class="fa-sign-out"></i>&nbsp;Quitter</a></li>
                     </ul>
@@ -40,11 +42,11 @@
                         <ul>
                             <li{% if navtab == 'overview' %} class="active"{% endif %}><a href="{{ domain() }}dashboard"><i class="fa-eye"></i>Accueil</a></li>
                             <li{% if navtab == 'history' %} class="active"{% endif %}><a href="{{ domain() }}history"><i class="fa-clock-o"></i>Historique</a></li>
-                            <li{% if navtab == 'tickets' %} class="active"{% endif %}><a href="{{ domain() }}tickets"><i class="fa-ticket"></i>Tickets</a></li>
-                            <li{% if navtab == 'projects' %} class="active"{% endif %}><a href="{{ domain() }}projects"><i class="fa-folder-o"></i>Projets</a></li>
-                            <li{% if navtab == 'users' %} class="active"{% endif %}><a href="{{ domain() }}user"><i class="fa-group"></i>Utilisateurs</a></li>
-                            <li{% if navtab == 'stats' %} class="active"{% endif %}><a href="{{ domain() }}stats"><i class="fa-bar-chart-o"></i>Statistiques</a></li>
-                            <li{% if navtab == 'new' %} class="active"{% endif %}><a href="{{ domain() }}tickets/create"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>
+                            <li{% if navtab == 'ticket' %} class="active"{% endif %}><a href="{{ domain() }}ticket"><i class="fa-ticket"></i>Tickets</a></li>
+                            <li{% if navtab == 'project' %} class="active"{% endif %}><a href="{{ domain() }}project"><i class="fa-folder-o"></i>Projets</a></li>
+                            {% if isGranted('team') %}<li{% if navtab == 'user' %} class="active"{% endif %}><a href="{{ domain() }}user"><i class="fa-group"></i>Utilisateurs</a></li>{% endif %}
+                            <li{% if navtab == 'stat' %} class="active"{% endif %}><a href="{{ domain() }}stat"><i class="fa-bar-chart-o"></i>Statistiques</a></li>
+                            <li{% if navtab == 'newTicket' %} class="active"{% endif %}><a href="{{ domain() }}ticket/add"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">
@@ -70,28 +72,56 @@
         </div>
         {% endblock %}
 
+        {% if alerts %}
+        
+        {% block alerts %}
+        <div id="alerts" class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                {% for type, message in alerts %}
+                    <div class="alert alert-{{type}}"><span>{{ message }}</span></div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+        
+        {% endif %}
+        
         <div id="content" class="animated">
         {% block content %}
             <!-- content -->
         {% endblock %}
         </div>
 
-		{% if showdebug == 'true' %}
-			<div class="row">
-				<div class="col-md-12">
-					<section class="well">
-						<h3>Dev Area</h3>
-						<p>isGranted('client') => {% if isGranted('client') %}TRUE{% else %}FALSE{% endif %}</p>
-						<p>isGranted('team') => {% if isGranted('team') %}TRUE{% else %}FALSE{% endif %}</p>
-						<p>isGranted('admin') => {% if isGranted('admin') %}TRUE{% else %}FALSE{% endif %}</p>
-						<code><pre>{{ dump(dumps) }}</pre></code>
-					</section>
-				</div>
-			</div>
-		{% endif %}
+        {% if showdebug == 'true' %}
+        <div class="row">
+            <div class="col-md-12">
+                <section class="well">
+                    <h3>Dev Area</h3>
+                    <p>isGranted('client') => {% if isGranted('client') %}TRUE{% else %}FALSE{% endif %}</p>
+                    <p>isGranted('team') => {% if isGranted('team') %}TRUE{% else %}FALSE{% endif %}</p>
+                    <p>isGranted('admin') => {% if isGranted('admin') %}TRUE{% else %}FALSE{% endif %}</p>
+                    <code><pre>{{ dump(dumps) }}</pre></code>
+                </section>
+            </div>
+        </div>
+        {% endif %}
+        
         {% block extras %}
-        <div id="home-demo">
+        <div id="extras">
             <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                    
+                    </div>
+                    <div class="col-md-4">
+                        
+                    </div>
+                    <div class="col-md-4">
+                        
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <h2>Qu'est ce que Shuttle ?</h2>
@@ -149,7 +179,7 @@
                     </div>
                     <div class="col-md-offset-2 col-md-4">
                         <h1 class="logo"><i class="fa-rocket"></i>&nbsp;Shuttle</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur acipit velit. Laborem et dolor amet apicit.</p>
+                        <p>Simple ticket management</p>
                     </div>
                 </div>
             </div>
@@ -159,12 +189,10 @@
         {% block scripts %}
             <script src="{{ domain() }}asset/js/jquery.min.js"></script>
             <script src="{{ domain() }}asset/js/bootstrap.min.js"></script>
+            <script src="{{ domain() }}asset/js/bootstrap-datepicker.js"></script>
         {% endblock %}
-				
-		{% if navtab == 'new' %}
-			<link rel="stylesheet" href="{{ domain() }}asset/css/datepicker.css">
-			<script src="{{ domain() }}asset/js/bootstrap-datepicker.js"></script>
-			<script src="{{ domain() }}asset/js/worker-datepicker.js"></script>
-		{% endif %}
+            
+        {% block pagescripts %}{% endblock %}
+            
         </body>
     </html>

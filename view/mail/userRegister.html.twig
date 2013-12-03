@@ -1,0 +1,7 @@
+{% extends "mail/layout.html.twig" %}
+
+{% block content %}
+<h3>Bienvenue sur Shuttle</h3>
+<p>Pour confirmer votre inscription et activer votre compte, cliquez sur le lien ci-dessous</p>
+<p><a href="http://shuttle.dev/activate/{{ email }}/{{ token }}">J'active mon compte</a></p>
+{% endblock %}

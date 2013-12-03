@@ -3,6 +3,7 @@
     <route pattern="/login" controller="user" action="login"/>
     <route pattern="/logout" controller="user" action="logout"/>
     <route pattern="/register" controller="user" action="register"/>
+    <route pattern="/recover(?:/(.*)/(.*))?" controller="user" action="recover" params="email,token"/>
     <route pattern="/activate/(.*)/(.*)" controller="user" action="activate" params="email,token"/>
     
     <route pattern="/" controller="dashboard" action="index" params="id" />
@@ -21,29 +22,27 @@
     <route pattern="/company/(\d+)/edit" controller="company" action="edit" params="id" />
     <route pattern="/company/(\d+)/delete" controller="company" action="delete" params="id" />
         
-    <route pattern="/tickets" controller="tickets" action="index"/>
-    <route pattern="/tickets/add" controller="tickets" action="add"/>
-    <route pattern="/tickets/create" controller="tickets" action="add"/>
-    <route pattern="/tickets/(\d+)/show" controller="tickets" action="show" params="id" />
-    <route pattern="/tickets/(\d+)/edit" controller="tickets" action="edit" params="id" />
-    <route pattern="/tickets/(\d+)/delete" controller="tickets" action="delete" params="id" />
-    <route pattern="/tickets/(\d+)/close" controller="tickets" action="close" params="id" />
-    <route pattern="/tickets/(\d+)/reopen" controller="tickets" action="reopen" params="id" />
+    <route pattern="/ticket" controller="tickets" action="index"/>
+    <route pattern="/ticket/add" controller="tickets" action="add"/>
+    <route pattern="/ticket/create" controller="tickets" action="add"/>
+    <route pattern="/ticket/(\d+)/show" controller="tickets" action="show" params="id" />
+    <route pattern="/ticket/(\d+)/edit" controller="tickets" action="edit" params="id" />
+    <route pattern="/ticket/(\d+)/delete" controller="tickets" action="delete" params="id" />
+    <route pattern="/ticket/(\d+)/close" controller="tickets" action="close" params="id" />
+    <route pattern="/ticket/(\d+)/reopen" controller="tickets" action="reopen" params="id" />
         
     <route pattern="/history" controller="history" action="index"/>
     <route pattern="/history/add" controller="history" action="add"/>
     <route pattern="/history/(\d+)/show" controller="history" action="show" params="id" />
         
-    <route pattern="/projects" controller="projects" action="index"/>
-    <route pattern="/projects/add" controller="projects" action="add"/>
-    <route pattern="/projects/(\d+)/show" controller="projects" action="show" params="id" />
-    <route pattern="/projects/(\d+)/edit" controller="projects" action="edit" params="id" />
-    <route pattern="/projects/(\d+)/delete" controller="projects" action="delete" params="id" />
+    <route pattern="/project" controller="project" action="index"/>
+    <route pattern="/project/add" controller="project" action="add"/>
+    <route pattern="/project/(\d+)/show" controller="project" action="show" params="id" />
+    <route pattern="/project/(\d+)/edit" controller="project" action="edit" params="id" />
+    <route pattern="/project/(\d+)/delete" controller="project" action="delete" params="id" />
         
-    <route pattern="/stats" controller="stats" action="index"/>
-    <route pattern="/stats/(\d+)/show" controller="stats" action="show" params="id" />
+    <route pattern="/stat" controller="stats" action="index"/>
+    <route pattern="/stat/(\d+)/show" controller="stats" action="show" params="id" />
         
     <route pattern="/settings" controller="settings" action="index" params="id" />
-	
-    <route pattern="/404" controller="error" action="ErroNo404"/>
 </routes>

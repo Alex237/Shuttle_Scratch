@@ -1,0 +1,33 @@
+{% extends "user/login.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <form id="register-form" class="jumbotron" method="post">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <h1><i class="fa-rocket"></i>&nbsp;Shuttle</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-4">
+                <div class="form-group">
+                    <input type="email" name="email" class="form-control input-lg" value="{{ setValue('email') }}" placeholder="Email" required>
+                    {{ formError('email') }}
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-lg btn-block btn-primary">Valider</button>
+                </div>
+            </div>
+            <div class=" col-md-4">
+                <h2>Mot de passe perdu ?</h2>
+                <p>Rien de grave, entrez l'adresse email de votre compte. Nous allons vous envoyer un lien permettant de définir un nouveau mot de passe.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-xs-12" style="text-align: center;">
+                Vous n'avez pas de compte ? <a href="/register" class="dynamic">Inscrivez-vous</a> | Le mot de passe vous est revenu ? <a href="login" class="dynamic">Identifiez-vous</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

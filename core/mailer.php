@@ -31,19 +31,42 @@ class Mailer
     }
 
     /**
+     * Send the signup confirmation mail
      * 
-     * @param type $email
-     * @param type $token
-     * @param \Twig_Environment $twig
+     * @param array $user The userdatas
+     * @param string $token The user activation token
+     * @param \Twig_Environment $twig The twig environment
      */
-    public function mailRegister($email, $token, \Twig_Environment $twig) {
+    public function mailUserRegister($user, \Twig_Environment $twig) {
 
         $message = Swift_Message::newInstance();
-        $message->setTo($email);
+        $message->setTo($user['email']);
         $message->setSubject('Shuttle - Confirmez votre inscription');
-        $message->setBody($twig->render('mail/register.html.twig', array(
-                    'email' => $email,
-                    'token' => $token
+        $message->setBody($twig->render('mail/userRegister.html.twig', array(
+                    'email' => $user['email'],
+                    'token' => $user['token']
+                )), 'text/html');
+        $message->setFrom("noreply@shuttle.dev", "Shuttle");
+
+        $mailer = Swift_Mailer::newInstance($this->transport);
+        $mailer->send($message);
+    }
+
+    /**
+     * Send the user creation validation mail
+     * 
+     * @param array $user The userdatas
+     * @param \Twig_Environment $twig The twig environment
+     */
+    public function mailUserCreate($user, \Twig_Environment $twig) {
+
+        $message = Swift_Message::newInstance();
+        $message->setTo($user['email']);
+        $message->setSubject('Shuttle - Confirmez votre inscription');
+        $message->setBody($twig->render('mail/userCreate.html.twig', array(
+                    'email' => $user['email'],
+                    'token' => $user['token'],
+                    'password' => $user['password']
                 )), 'text/html');
         $message->setFrom("noreply@shuttle.dev", "Shuttle");
 

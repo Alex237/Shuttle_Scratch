@@ -209,7 +209,8 @@ abstract class BaseModel
         }
 
         $sql .= $this->query['orderBy'] . $this->query['limit'];
-
+        $this->flush();
+        
         return (string) $sql;
     }
 

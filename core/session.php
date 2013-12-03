@@ -105,10 +105,15 @@ class Session
         if (!empty($this->userdata)) {
 
             if ($role != null) {
-                return in_array($role, $this->userdata['roles']);
+                $roles = $this->userdata['roles'];
+                if(empty($roles)) {
+                    return FALSE;
+                } else {
+                    return in_array($role, $roles);
+                }
+            } else {
+                return TRUE;
             }
-
-            return TRUE;
         } else {
             return FALSE;
         }
