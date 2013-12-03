@@ -1,5 +1,5 @@
 <?php
-require_once './Controller/BaseController.php';
+require_once './controller/BaseController.php';
 
 /**
  * The dasboard controller
