@@ -1,13 +1,14 @@
 <?php
 
-require_once './Controller/BaseController.php';
+require_once './controller/BaseController.php';
 
 /**
  * The dasboard controller
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
-class Tickets extends BaseController {
+class Tickets extends BaseController
+{
     /*
      * Constructor
      */
@@ -111,7 +112,7 @@ class Tickets extends BaseController {
     public function show($idTicket) {
         $this->model->init();
         $tickeData = $this->model->loadById($idTicket);
-        
+
         $this->model->flush();
         $lastId = $this->model->getLastId();
         $previous = $next = $idTicket;
@@ -120,24 +121,24 @@ class Tickets extends BaseController {
             if ($next <= $lastId['idTicket']) {
                 $this->model->flush();
                 $nextTicket = $this->model->loadById($next);
-            }  else {
-                $nextTicket = null ;
+            } else {
+                $nextTicket = null;
                 break;
             }
         } while (($nextTicket == FALSE) && $next <= $lastId['idTicket']);
-        
+
         $this->model->flush();
         do {
             $previous = $previous - 1;
             if (($previous > 1) && ($previous <= $lastId['idTicket'])) {
                 $this->model->flush();
                 $previousTicket = $this->model->loadById($previous);
-            }  else {
-                $previousTicket = null ;
+            } else {
+                $previousTicket = null;
                 break;
             }
         } while (($previousTicket == FALSE) && ($previous > 1) && ($previous <= $lastId['idTicket']));
-        
+
         if ($tickeData) {
             $data = array(
                 'action' => 'close',
@@ -377,4 +378,3 @@ class Tickets extends BaseController {
     }
 
 }
-

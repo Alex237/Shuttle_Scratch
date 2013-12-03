@@ -1,6 +1,6 @@
 <?php
 
-require_once './Controller/BaseController.php';
+require_once './controller/BaseController.php';
 require_once './core/validator.php';
 
 /**
@@ -92,4 +92,3 @@ class Project extends BaseController
     }
 
 }
-
