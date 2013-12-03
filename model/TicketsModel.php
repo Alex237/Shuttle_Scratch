@@ -18,15 +18,6 @@ class TicketsModel extends BaseModel {
 
     /**
      * 
-     * @param array $data
-     * @return boolean
-     */
-    public function submit($data) {
-        return $this->save($data);
-    }
-
-    /**
-     * 
      * @param type $offset
      * @param type $limit
      */
@@ -154,6 +145,17 @@ class TicketsModel extends BaseModel {
             return $result;
         }
     }
+    
+    public function saveTicket($data) {
+            $sql = 'UPDATE ';
+            $sql .= $this->table;
+             $sql .= ' (' . implode(',', array_keys($data)) . ') VALUES (:' . implode(',:', array_keys($data)) . ')';
+            $this->db->exec('SET foreign_key_checks = 0');
+            $insert = $this->db->prepare($sql);
+            $result = $insert->execute($data);
+            $this->db->exec('SET foreign_key_checks = 1');
+            return $result;
+    }
 
     public function reopenTicket($idTicket) {
         if ($idTicket != null && is_numeric($idTicket)) {
@@ -181,37 +183,61 @@ class TicketsModel extends BaseModel {
         $insert = $this->db->prepare($sql);
 
         return $insert->execute($data);
-    }/**
+    }
+
+    /**
      * 
      * @param type $offset
      * @param type $limit
      */
     public function countAllTickets() {
         $query = $this->select(array('COUNT(*)'))
-                        ->from(array($this->table))
-                        ->buildQuery();
+                ->from(array($this->table))
+                ->buildQuery();
 
         $result = $this->db->query($query);
         return $result->fetchColumn();
     }
-    
+
     public function getLastId() {
         $query = $this->select(array('idTicket'))
-                ->from(array($this->table))
-                ->orderBy(array('idTicket'), 'DESC')
-                ->limit(0, 1)->buildQuery();//SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+                        ->from(array($this->table))
+                        ->orderBy(array('idTicket'), 'DESC')
+                        ->limit(0, 1)->buildQuery(); //SELECT fields FROM table ORDER BY id DESC LIMIT 1;
         $result = $this->db->query($query);
         return $result->fetch();
-        
     }
+
     public function getFirstId() {
         $query = $this->select(array('idTicket'))
-                ->from(array($this->table))
-                ->orderBy(array('idTicket'))
-                ->limit(0, 1)->buildQuery();//SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+                        ->from(array($this->table))
+                        ->orderBy(array('idTicket'))
+                        ->limit(0, 1)->buildQuery(); //SELECT fields FROM table ORDER BY id DESC LIMIT 1;
         $result = $this->db->query($query);
         return $result->fetch();
-        
+    }
+
+    public function getPreviousId($current) {
+        $query = $this->select(array('idTicket'))
+                        ->from(array($this->table))
+                        ->where(array('idTicket' . ' < :idTicket'))
+                        ->orderBy(array('idTicket'), 'DESC')
+                        ->limit(0, 1)->buildQuery(); //SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+
+        $result = $this->db->prepare($query);
+        $result->execute(array(':idTicket' => $current));
+        return $result->fetch();
+    }
+
+    public function getNextId($current) {
+        $query = $this->select(array('idTicket'))
+                        ->from(array($this->table))
+                        ->where(array('idTicket' . ' > :idTicket'))
+                        ->limit(0, 1)->buildQuery(); //SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+
+        $result = $this->db->prepare($query);
+        $result->execute(array(':idTicket' => $current));
+        return $result->fetch();
     }
 
 }

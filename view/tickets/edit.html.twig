@@ -20,7 +20,7 @@
                             <select class="form-control" id="type" name="type" {{ setValue('type', ticket.type) }}>
                                 <option value="">Choisir un type</option>
                                 {% for type in types %}
-                                <option value="{{ type.idTicketType }}" {{ set_select('type', type.idTicketType) }}>{{ type.label|capitalize }}</option>
+                                <option value="{{ type.idTicketType }}" {% if (type.idTicketType == ticket.type) %}selected="selected" {% endif %}>{{ type.label|capitalize }}</option>
                                 {% endfor %}
                             </select>
                             {{ formError('type') }}
