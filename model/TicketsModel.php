@@ -146,10 +146,23 @@ class TicketsModel extends BaseModel {
         }
     }
     
-    public function saveTicket($data) {
+    public function saveTicket($data, $idTicket) {
             $sql = 'UPDATE ';
             $sql .= $this->table;
-             $sql .= ' (' . implode(',', array_keys($data)) . ') VALUES (:' . implode(',:', array_keys($data)) . ')';
+            $sql .= ' SET ';
+            foreach ($data as $key => $value) {
+                $sql .= $key.' = :'.$key.', ';
+            }
+            $columns = array_keys($data);
+            foreach ($columns as $column) {
+                if ($column != $this->primaryKey) {
+                    $sql .= $column . ' = :' . $column;
+                    if (end($columns) != $column) {
+                        $sql .= ', ';
+                    }
+                }
+            }
+            $sql .= ' WHERE idTicket = ' . $idTicket;
             $this->db->exec('SET foreign_key_checks = 0');
             $insert = $this->db->prepare($sql);
             $result = $insert->execute($data);

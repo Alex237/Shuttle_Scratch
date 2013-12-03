@@ -115,7 +115,11 @@ section.well > h3 {
 .navbar-controls button:hover {
     background-color: #555;
 }
-
+/*Navbar Brand
+===========================================================*/
+.navbar > .container .navbar-brand {
+    margin-left: 0px;
+}
 /* Subnavbar
 ===========================================================*/
 #subnavbar {
@@ -136,7 +140,7 @@ section.well > h3 {
 #subnavbar ul {
     display: inline-block;
     padding: 0;
-    margin: 0 0 0 20px;
+    margin: 0;
     list-style: none;
     border-left: 1px solid #292929;
     border-right: 1px solid #4A4A4A;

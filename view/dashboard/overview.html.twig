@@ -30,12 +30,18 @@
             <section class="well">
                 <h3>
                     <i class="fa-user"></i> 
-                    Bienvenue {{ [userData.lastname, userData.firstname]|join(' ')}} 
+                    <b>Bienvenue {{ [userData.lastname, userData.firstname]|join(' ')}} </b>
+                    
                     <div class="pull-right"> 
-                        <a href="{{ domain() }}user/{{ userData.idUser }}/delete"><i class="fa-times"></i></a>
+                        <a class="btn btn-danger btn-xs" href="{{ domain() }}user/{{ userData.idUser }}/delete">
+							<i class="fa-times"></i> Supprimer 
+						</a>&nbsp;
                     </div>
                     <div class="pull-right"> 
-                        <a href="{{ domain() }}user/{{ userData.idUser }}/edit"><i class="fa-edit"></i></a>
+                        <a class="btn btn-primary btn-xs" href="{{ domain() }}user/{{ userData.idUser }}/edit">
+							<i class="fa-edit"></i> Editer 
+						</a>
+                        &nbsp;
                     </div>
                 </h3>
                 <div class="page-header-min"><b>Informations : </b></div>
@@ -79,26 +85,6 @@
             <section class="well">
                 <h3>Aide ?</h3>
             </section>
-        </div>
-    </div>
-</div>
-{% endblock %}
-
-{% block extras %}
-<div id="extras">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Qu'est ce que Shuttle ?</h2>
-                <p>
-                    Shuttle est une solution web libre de gestion de Support. Il est destiné à des services de HelpDesk, multi-techniciens ou pas.
-                    Cette outil permet de centraliser, classifier, vos demandes et incidents par l'intermédiaire de tickets, 
-                    vous permettant ainsi d'informer en temps réel vos collaborateurs.
-                    <br />
-                    Au fur et à mesure de la création de vos incidents vous mettez en place une base de connaissance, 
-                    qui vous permettra de trouver rapidement des réponses à vos demandes.
-                </p>
-            </div>
         </div>
     </div>
 </div>

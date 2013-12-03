@@ -1,6 +1,6 @@
 {% extends "layout.html.twig" %}
 
-{% set navtab = 'new' %}
+{% set navtab = 'newTicket' %}
 
 {% block content %}
 <div class="container">
@@ -127,4 +127,9 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block pagescripts %}
+<script src="{{ domain() }}asset/js/bootstrap-datepicker.js"></script>
+<script src="{{ domain() }}asset/js/worker-datepicker.js"></script>
 {% endblock %}

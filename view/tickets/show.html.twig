@@ -2,139 +2,139 @@
 
 {% block content %}
 <div class="container">
-	<div class="row">
-		<div class="col-md-12">
-			{% if nextTicket != null %}
-			<div class="pull-right">
-				<a href="{{ domain() }}tickets/{{ nextTicket.idTicket }}/show" class="btn btn-primary btn-lg">
-					Ticket suivant <i class="fa-caret-right"></i>
-				</a>&nbsp;
-			</div>
-			{% endif %}
-			{% if previousTicket != null %}
-			<div class="pull-left">
-				<a href="{{ domain() }}tickets/{{ previousTicket.idTicket }}/show" class="btn btn-primary btn-lg">
-					<i class="fa-caret-left"></i> Ticket précédent
-				</a>&nbsp;
-			</div>
-			{% endif %}
-		</div>
-		<div class="clearfix"></div>
-	</div>
-	<br >
     <div class="row">
-		<div class="col-md-12">
-			<section class="well">
-				<h3> 
-					#{{ ticket.idTicket }} - {{ ticket.title }} 
-					<div class="pull-right">
-						<a href="{{ domain() }}tickets/{{ ticket.idTicket }}/delete" class="btn btn-danger btn-xs">
-							<i class="fa-times"></i> Supprimer 
-						</a>&nbsp;
-					</div>
-					<div class="pull-right">
-						<a href="{{ domain() }}tickets/{{ ticket.idTicket }}/edit" class="btn btn-primary btn-xs">
-							<i class="fa-edit"></i> Editer 
-						</a>&nbsp;
-					</div>
-					{% if ticket.status < 8 %}
-					<div class="pull-right">
-						<a href="{{ domain() }}tickets/{{ ticket.idTicket }}/close" class="btn btn-warning btn-xs">
-							<i class="fa-edit"></i> Fermer 
-						</a>&nbsp;
-					</div>
-					{% else %}
-					<div class="pull-right">
-						<a href="{{ domain() }}tickets/{{ ticket.idTicket }}/reopen" class="btn btn-info btn-xs">
-							<i class="fa-unlock"></i> Réouvrir 
-						</a>&nbsp;
-					</div>
-					{% endif %}
-				</h3>
-				<div class="row">
-					<div class="form-group col-md-2">
-						<b>Type de demande : </b>
-						<div class="alert alert-link">
-						{% if ticket.idTicketType == 1 %} 
-								<i class="fa-bug"></i> 
-						{% elseif ticket.idTicketType == 2 %} 
-								<i class="fa-wheelchair"></i> 
-						{% elseif ticket.idTicketType == 3 %} 
-								<i class="fa-info"></i> 
-						{% elseif ticket.idTicketType == 4 %} 
-								<i class="fa-comments-o"></i> 
-						{% endif %}
-						{{ ticket.label|capitalize }}
-							</div>
-						</div>
-						<div class="form-group col-md-2">
-							<b>Importance : </b>
-						{% if ticket.level == 1 %}
-							<div class="alert alert-info"><i class="fa-exclamation"></i> Bas </div>
-						{% elseif ticket.level == 2 %}
-							<div class="alert alert-success"><i class="fa-exclamation-circle"></i> Normal </div>
-						{% elseif ticket.level == 3 %} 
-							<div class="alert alert-warning"><i class="fa-exclamation-triangle"></i> Haut </div>
-						{% elseif ticket.level == 4 %} 
-							<div class="alert alert-danger"><i class="fa-warning"></i> Urgent </div>
-						{% else %}
-							<div class="alert alert-link"><i class="fa-comments-o"></i> Négligeable </div>
-						{% endif %}
-						</div>
-						<div class="form-group col-md-2">
-							<b>Assigné à : <br />{{ [ticket.assignedToFirstname|capitalize, ticket.assignedToLastname|capitalize]|join(' ') }}</b>
-						</div>
-						<div class="form-group col-md-2">
-							<b>Ouvert par : <br />{{ [ticket.lastname|capitalize, ticket.firstname|capitalize]|join(' ') }}</b>
-						</div>
-						<div class="form-group col-md-2">
-						{% if (ticket.closeDate is null) %}
-								<b>Le ticket n'a pas été traité</b>
-						{% else %}
-								<b>Le ticket a été fermé le : {{ticket.closeDate|date('d/m/Y') }}</b>
-						{% endif %}
-							</div>
+        <div class="col-md-12">
+            {% if nextTicket != null %}
+            <div class="pull-right">
+                <a href="{{ domain() }}tickets/{{ nextTicket.idTicket }}/show" class="btn btn-primary btn-lg">
+                    Ticket suivant <i class="fa-caret-right"></i>
+                </a>&nbsp;
+            </div>
+            {% endif %}
+            {% if previousTicket != null %}
+            <div class="pull-left">
+                <a href="{{ domain() }}tickets/{{ previousTicket.idTicket }}/show" class="btn btn-primary btn-lg">
+                    <i class="fa-caret-left"></i> Ticket précédent
+                </a>&nbsp;
+            </div>
+            {% endif %}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <br >
+    <div class="row">
+        <div class="col-md-12">
+            <section class="well">
+                <h3> 
+                    #{{ ticket.idTicket }} - {{ ticket.title }} 
+                    <div class="pull-right">
+                        <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/delete" class="btn btn-danger btn-xs">
+                            <i class="fa-times"></i> Supprimer 
+                        </a>&nbsp;
+                    </div>
+                    <div class="pull-right">
+                        <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/edit" class="btn btn-primary btn-xs">
+                            <i class="fa-edit"></i> Editer 
+                        </a>&nbsp;
+                    </div>
+                    {% if ticket.status < 8 %}
+                    <div class="pull-right">
+                        <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/close" class="btn btn-warning btn-xs">
+                            <i class="fa-edit"></i> Fermer 
+                        </a>&nbsp;
+                    </div>
+                    {% else %}
+                    <div class="pull-right">
+                        <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/reopen" class="btn btn-info btn-xs">
+                            <i class="fa-unlock"></i> Réouvrir 
+                        </a>&nbsp;
+                    </div>
+                    {% endif %}
+                </h3>
+                <div class="row">
+                    <div class="form-group col-md-2">
+                        <b>Type de demande : </b>
+                        <div class="alert alert-link">
+                            {% if ticket.idTicketType == 1 %} 
+                            <i class="fa-bug"></i> 
+                            {% elseif ticket.idTicketType == 2 %} 
+                            <i class="fa-wheelchair"></i> 
+                            {% elseif ticket.idTicketType == 3 %} 
+                            <i class="fa-info"></i> 
+                            {% elseif ticket.idTicketType == 4 %} 
+                            <i class="fa-comments-o"></i> 
+                            {% endif %}
+                            {{ ticket.label|capitalize }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <b>Importance : </b>
+                        {% if ticket.level == 1 %}
+                        <div class="alert alert-info"><i class="fa-exclamation"></i> Bas </div>
+                        {% elseif ticket.level == 2 %}
+                        <div class="alert alert-success"><i class="fa-exclamation-circle"></i> Normal </div>
+                        {% elseif ticket.level == 3 %} 
+                        <div class="alert alert-warning"><i class="fa-exclamation-triangle"></i> Haut </div>
+                        {% elseif ticket.level == 4 %} 
+                        <div class="alert alert-danger"><i class="fa-warning"></i> Urgent </div>
+                        {% else %}
+                        <div class="alert alert-link"><i class="fa-comments-o"></i> Négligeable </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-2">
+                        <b>Assigné à : <br />{{ [ticket.assignedToFirstname|capitalize, ticket.assignedToLastname|capitalize]|join(' ') }}</b>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <b>Ouvert par : <br />{{ [ticket.lastname|capitalize, ticket.firstname|capitalize]|join(' ') }}</b>
+                    </div>
+                    <div class="form-group col-md-2">
+                        {% if (ticket.closeDate is null) %}
+                        <b>Le ticket n'a pas été traité</b>
+                        {% else %}
+                        <b>Le ticket a été fermé le : {{ticket.closeDate|date('d/m/Y') }}</b>
+                        {% endif %}
+                    </div>
 
-							<div class="form-group col-md-2">
-								<b>Status : <br />{{ ticket.statusLabel}}</b>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="content">Détail</label>
-							<textarea class="form-control" id="content" name="content" rows="12" disabled="true">{{ ticket.content }}</textarea>
-						</div>
-						<fielset>
-							<legend>Temporalité</legend>
-							<div class="row">
-								<div class="form-group col-md-4">
-									<label for="startDate">Date de debut</label>
-									<div class="input-group">
-										<input type="text" class="form-control" id="startDate" name="startDate" value="{{ ticket.openDate|date("d/m/Y")}}" disabled="true">
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-default" disabled="true"><i class="fa-calendar-o"></i></button>
-										</span>
-									</div>
-								</div>
-								<div class="form-group col-md-4">
-									<label for="deadline">Date de fin</label>
-									<div class="input-group">
-										<input type="text" class="form-control" id="deadline" name="deadline" value="{{ ticket.deadline|date(("d/m/Y"))}}" disabled="true">
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-default" disabled="true"><i class="fa-calendar-o"></i></button>
-										</span>
-									</div>
-								</div>
-								<div class="form-group col-md-4">
-									<label for="estimatedTime">Temps estimé</label>
-									<div class="input-group">
-										<input type="text" class="form-control" id="estimatedTime" value="{{ticket.estimatedTime}}" name="estimatedTime" disabled="true">
-										<span class="input-group-addon">Jours</span>
-									</div>
-								</div>
-							</div>
-						</fielset>
-					</section>
-				</div>
-			</div>
-		</div>
+                    <div class="form-group col-md-2">
+                        <b>Status : <br />{{ ticket.statusLabel}}</b>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="content">Détail</label>
+                    <textarea class="form-control" id="content" name="content" rows="12" disabled="true">{{ ticket.content }}</textarea>
+                </div>
+                <fielset>
+                    <legend>Temporalité</legend>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="startDate">Date de debut</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="startDate" name="startDate" value="{{ ticket.openDate|date("d/m/Y")}}" disabled="true">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" disabled="true"><i class="fa-calendar-o"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="deadline">Date de fin</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="deadline" name="deadline" value="{{ ticket.deadline|date(("d/m/Y"))}}" disabled="true">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" disabled="true"><i class="fa-calendar-o"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="estimatedTime">Temps estimé</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="estimatedTime" value="{{ticket.estimatedTime}}" name="estimatedTime" disabled="true">
+                                <span class="input-group-addon">Jours</span>
+                            </div>
+                        </div>
+                    </div>
+                </fielset>
+            </section>
+        </div>
+    </div>
+</div>
 {% endblock %}
