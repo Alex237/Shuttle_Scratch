@@ -1,15 +1,12 @@
 /* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * a.cadevall@insta.fr
  */
-
-
 var nowTemp = new Date();
 var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
 var startDate = $('#startDate').datepicker({
 	onRender: function(date) {
-		return date.valueOf() < now.valueOf() ? 'disabled' : '';
+		return date.valueOf() < now.valueOf() ? '' : '';
 	}
 }).on('changeDate', function(ev) {
 	if (ev.date.valueOf() > deadline.date.valueOf()) {

@@ -12,12 +12,12 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="title"><b>Intitulé</b></label>
-                            <input type="text" class="form-control" id="title" name="title" {{ setValue('title', ticket.title) }} placeholder="Nouveau ticket" />
+                            <input type="text" class="form-control" id="title" name="title" value="{{ setValue('title', ticket.title) }}" placeholder="Nouveau ticket" />
                             {{ formError('title') }}
                         </div>
                         <div class="form-group col-md-4">
                             <label for="type"><b>Type de demande</b></label>
-                            <select class="form-control" id="type" name="type" {{ setValue('type', ticket.type) }}>
+                            <select class="form-control" id="type" name="type">
                                 <option value="">Choisir un type</option>
                                 {% for type in types %}
                                 <option value="{{ type.idTicketType }}" {% if (type.idTicketType == ticket.type) %}selected="selected" {% endif %}>{{ type.label|capitalize }}</option>
@@ -28,19 +28,19 @@
 						{% if isGranted('admin') or isGranted('team') %}
                         <div class="form-group col-md-2">
                             <label for="level"><b>Importance</b></label>
-                            <select class="form-control" id="level" name="level" {{ setValue('level') }}>
-                                <option value="5">Urgent</option>
-                                <option value="4">Haut</option>
-                                <option value="3" selected>Normal</option>
-                                <option value="2">Bas</option>
-                                <option value="1">Négligeable</option>
+                            <select class="form-control" id="level" name="level">
+                                <option value="5"{% if (type.level == 5) %} selected="selected"{% endif %}>Urgent</option>
+                                <option value="4"{% if (type.level == 4) %} selected="selected"{% endif %}>Haut</option>
+                                <option value="3"{% if (type.level == 3) %} selected="selected"{% endif %}>Normal</option>
+                                <option value="2"{% if (type.level == 2) %} selected="selected"{% endif %}>Bas</option>
+                                <option value="1"{% if (type.level == 1) %} selected="selected"{% endif %}>Négligeable</option>
                             </select>
                         </div>
 						{% endif %}
                     </div>
                     <div class="form-group">
                         <label for="content"><b>Détail</b></label>
-                        <textarea class="form-control" id="content" name="detail" rows="12" {{ setValue('detail') }}>{{ ticket.content }}</textarea>
+                        <textarea class="form-control" id="content" name="detail" rows="12" >{{ setValue('detail',ticket.content) }}</textarea>
 						{{ formError('detail') }}
                     </div>
 					{% if isGranted('admin') or isGranted('team') %}
@@ -50,7 +50,7 @@
                             <div class="form-group col-md-4">
                                 <label for="startDate">Date de debut</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="startDate" name="startDate" {{ setValue('startDate', ticket.startDate|date('d/m/y')) }} />
+                                    <input type="text" class="form-control" id="startDate" name="startDate" value="{{ setValue('startDate', ticket.startDate|date('d/m/Y')) }}" data-date-format="dd/mm/yyyy" />
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" id="startDateBtn"><i class="fa-calendar-o"></i></button>
                                     </span>
@@ -60,7 +60,7 @@
                             <div class="form-group col-md-4">
                                 <label for="deadline"><b>Date de fin</b></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="deadline" name="deadline" {{ setValue('deadline', ticket.deadline|date('d/m/y')) }}/>
+                                    <input type="text" class="form-control" id="deadline" name="deadline" value="{{ setValue('deadline', ticket.deadline|date('d/m/Y')) }}" data-date-format="dd/mm/yyyy"/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" id="deadlineBtn"><i class="fa-calendar-o"></i></button>
                                     </span>
@@ -70,7 +70,7 @@
                             <div class="form-group col-md-4">
                                 <label for="estimatedTime"><b>Temps estimé</b></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="estimatedTime" name="estimatedTime" {{ setValue('estimatedTime', ticket.estimatedTime) }} />
+                                    <input type="text" class="form-control" id="estimatedTime" name="estimatedTime" value="{{ setValue('estimatedTime', ticket.estimatedTime) }}" />
                                     <span class="input-group-addon">Jours</span>
                                 </div>
                             </div>
@@ -134,4 +134,29 @@
         </form>
     </div>
 </div>
+{% endblock %}
+{% block extras %}
+<div id="extras">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h3>Qu'est ce que Shuttle ?</h3>
+                </div>
+                <p>
+                    Shuttle est une solution web libre de gestion de Support. Il est destiné à des services de HelpDesk, multi-techniciens ou pas.
+                    Cette outil permet de centraliser, classifier, vos demandes et incidents par l'intermédiaire de tickets, 
+                    vous permettant ainsi d'informer en temps réel vos collaborateurs.
+                    <br />
+                    Au fur et à mesure de la création de vos incidents vous mettez en place une base de connaissance, 
+                    qui vous permettra de trouver rapidement des réponses à vos demandes.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block pagescripts %}
+<script src="{{ domain() }}asset/js/bootstrap-datepicker.js"></script>
+<script src="{{ domain() }}asset/js/worker-datepicker.js"></script>
 {% endblock %}

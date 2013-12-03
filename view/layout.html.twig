@@ -42,11 +42,11 @@
                         <ul>
                             <li{% if navtab == 'overview' %} class="active"{% endif %}><a href="{{ domain() }}dashboard"><i class="fa-eye"></i>Accueil</a></li>
                             <li{% if navtab == 'history' %} class="active"{% endif %}><a href="{{ domain() }}history"><i class="fa-clock-o"></i>Historique</a></li>
-                            <li{% if navtab == 'ticket' %} class="active"{% endif %}><a href="{{ domain() }}ticket"><i class="fa-ticket"></i>Tickets</a></li>
+                            <li{% if navtab == 'ticket' %} class="active"{% endif %}><a href="{{ domain() }}tickets"><i class="fa-ticket"></i>Tickets</a></li>
                             <li{% if navtab == 'project' %} class="active"{% endif %}><a href="{{ domain() }}project"><i class="fa-folder-o"></i>Projets</a></li>
                             {% if isGranted('team') %}<li{% if navtab == 'user' %} class="active"{% endif %}><a href="{{ domain() }}user"><i class="fa-group"></i>Utilisateurs</a></li>{% endif %}
                             <li{% if navtab == 'stat' %} class="active"{% endif %}><a href="{{ domain() }}stat"><i class="fa-bar-chart-o"></i>Statistiques</a></li>
-                            <li{% if navtab == 'newTicket' %} class="active"{% endif %}><a href="{{ domain() }}ticket/add"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>
+                            <li{% if navtab == 'newTicket' %} class="active"{% endif %}><a href="{{ domain() }}tickets/add"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">
@@ -111,17 +111,6 @@
         {% block extras %}
         <div id="extras">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                    
-                    </div>
-                    <div class="col-md-4">
-                        
-                    </div>
-                    <div class="col-md-4">
-                        
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <h2>Qu'est ce que Shuttle ?</h2>
@@ -189,7 +178,6 @@
         {% block scripts %}
             <script src="{{ domain() }}asset/js/jquery.min.js"></script>
             <script src="{{ domain() }}asset/js/bootstrap.min.js"></script>
-            <script src="{{ domain() }}asset/js/bootstrap-datepicker.js"></script>
         {% endblock %}
             
         {% block pagescripts %}{% endblock %}

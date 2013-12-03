@@ -19,7 +19,7 @@ class Dashboard extends BaseController
     public function index() {
         $this->model->init();
         $idData = $this->session->getUserData();
-        $user = $this->model->loadUserData($idData['idUser']);
+        $user = $this->model->loadById($idData['idUser']);
         $user['roles'] = json_decode($user['roles']);
         $this->twig->display('dashboard/overview.html.twig', array(
             'userData' => $user

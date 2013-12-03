@@ -29,7 +29,7 @@ class User extends BaseController
         $this->restrict('team');
         $this->model->init();
 
-        $this->twig->display('user/users.html.twig', array(
+        $this->twig->display('user/user.html.twig', array(
             'users' => $this->model->loadAll()
         ));
 
