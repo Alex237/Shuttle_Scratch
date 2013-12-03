@@ -392,4 +392,3 @@ class Tickets extends BaseController {
     }
 
 }
-
