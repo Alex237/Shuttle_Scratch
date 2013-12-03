@@ -30,12 +30,18 @@
             <section class="well">
                 <h3>
                     <i class="fa-user"></i> 
-                    Bienvenue {{ [userData.lastname, userData.firstname]|join(' ')}} 
+                    <b>Bienvenue {{ [userData.lastname, userData.firstname]|join(' ')}} </b>
+                    
                     <div class="pull-right"> 
-                        <a href="{{ domain() }}user/{{ userData.idUser }}/delete"><i class="fa-times"></i></a>
+                        <a class="btn btn-danger btn-xs" href="{{ domain() }}user/{{ userData.idUser }}/delete">
+							<i class="fa-times"></i> Supprimer 
+						</a>&nbsp;
                     </div>
                     <div class="pull-right"> 
-                        <a href="{{ domain() }}user/{{ userData.idUser }}/edit"><i class="fa-edit"></i></a>
+                        <a class="btn btn-primary btn-xs" href="{{ domain() }}user/{{ userData.idUser }}/edit">
+							<i class="fa-edit"></i> Editer 
+						</a>
+                        &nbsp;
                     </div>
                 </h3>
                 <div class="page-header-min"><b>Informations : </b></div>
@@ -84,8 +90,7 @@
 </div>
 {% endblock %}
 {% block extras %}
-
-<div id="home-demo">
+<div id="extras">
     <div class="container">
         <div class="row">
             <div class="col-md-12">

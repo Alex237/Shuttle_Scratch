@@ -43,8 +43,7 @@ class Tickets extends BaseController {
     public function add() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
             require_once './core/validator.php';
-            $validator = Validator::getInstance();
-
+            $validator = new Validator();
             $validator->addRules('title', 'required')
                     ->addRules('type', 'required')
                     ->addRules('detail', 'required')
@@ -55,16 +54,15 @@ class Tickets extends BaseController {
                 $this->model->init();
                 $userdata = $this->session->getUserData();
                 $ticket = array(
-                    'idTicket' => '',
                     'type' => $_POST['type'],
                     'level' => $_POST['level'],
-                    'openDate' => $_POST['startDate'],
-                    'updateDate' => $_POST['startDate'],
+                    'openDate' => implode('-', array_reverse(explode('/', $_POST['startDate']))),
+                    'updateDate' => implode('-', array_reverse(explode('/', $_POST['startDate']))),
                     'closeDate' => null,
                     'percent' => 0,
                     'openBy' => $userdata['idUser'],
                     'assignedTo' => $_POST['assignedTo'],
-                    'deadline' => $_POST['deadline'],
+                    'deadline' => implode('-', array_reverse(explode('/', $_POST['deadline']))),
                     'estimatedTime' => $_POST['estimatedTime'],
                     'title' => $_POST['title'],
                     'content' => $_POST['detail'],
@@ -202,48 +200,61 @@ class Tickets extends BaseController {
     }
 
     /**
-     * 
-     * @param type $idTicket
+     * edit ticket in database.
+     * Only a admin or a team member can acces
+     * @param int $idTicket. The ticket id in database
      */
     public function edit($idTicket) {
         if ($this->session->isGranted("admin") || $this->session->isGranted("team")) {
             if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
-                $now = new \DateTime();
-                $ticket = array(
-                    'idTicket' => $idTicket,
-                    'type' => $_POST['type'],
-                    'level' => $_POST['level'],
-                    'openDate' => $_POST['startDate'],
-                    'updateDate' => $now->format('Y-m-d H:i:s'),
-                    'assignedTo' => $_POST['assignedTo'],
-                    'deadline' => $_POST['deadline'],
-                    'estimatedTime' => $_POST['estimatedTime'],
-                    'title' => $_POST['title'],
-                    'content' => $_POST['detail'],
-                    'project' => $_POST['idProjet'],
-                    'status' => $_POST['statusCange']
-                );
-                var_dump($_POST);
-                $data = array(
-                    'action' => 'edit',
-                    'view' => 'tickets',
-                    'showdebug' => true,
-                    'dumps' => $ticket
-                ); 
-                if ($this->model->saveTicket($ticket)) {
-                    $msg = 'Le ticket : <b>"' . $_POST['title'] . '"</b> numéro : <b>' . $idTicket . '</b>" a bien été mis à jours';
-                    $data = array(
-                        'action' => 'création',
-                        'view' => 'tickets',
-                        'msg' => $msg
+                require_once './core/validator.php';
+                $validator = new Validator();
+                $validator->addRules('title', 'required')
+                        ->addRules('type', 'required')
+                        ->addRules('detail', 'required')
+                        ->addRules('startDate', 'required|validdate')
+                        ->addRules('deadline', 'required|validdate');
+
+                if ($validator->run()) {
+                    $now = new \DateTime();
+                    $ticket = array(
+                        'type' => $_POST['type'],
+                        'level' => $_POST['level'],
+                        'openDate' => implode('-', array_reverse(explode('/', $_POST['startDate']))),
+                        'updateDate' => $now->format('Y-m-d H:i:s'),
+                        'assignedTo' => $_POST['assignedTo'],
+                        'deadline' => implode('-', array_reverse(explode('/', $_POST['deadline']))),
+                        'estimatedTime' => $_POST['estimatedTime'],
+                        'title' => $_POST['title'],
+                        'content' => $_POST['detail'],
+                        'project' => $_POST['idProjet'],
+                        'status' => $_POST['statusCange']
                     );
-                    $this->model->close();
-                    $this->twig->display('info/msg.success.request.twig', $data);
-                    exit;
+                    $data = array(
+                        'action' => 'edit',
+                        'view' => 'tickets'
+                    );
+                    $this->model->init();
+                    if ($this->model->saveTicket($ticket, $idTicket)) {
+                        $msg = 'Le ticket : "' . $_POST['title'] . '" numéro : ' . $idTicket . '" a bien été mis à jours';
+                        $data = array(
+                            'action' => 'création',
+                            'view' => 'tickets',
+                            'msg' => $msg
+                        );
+                        $this->model->close();
+                        $this->twig->display('info/msg.success.request.twig', $data);
+                        exit;
+                    } else {
+                        $msg = "Vous n'êtes pas autoriser à faire cette action !";
+                        $data = array(
+                            'view' => 'tickets',
+                            'msg' => $msg
+                        );
+                        $this->twig->display('info/msg.failure.request.twig', $data);
+                        exit;
+                    }
                 }
-                exit;
-                $this->twig->display('info/msg.success.request.twig', $data);
-                exit;
             }
             $this->model->init();
             $types = $this->model->loadTicketTypes();
@@ -269,9 +280,7 @@ class Tickets extends BaseController {
                     'ticket' => $tickeData,
                     'types' => $types,
                     'projets' => $projets,
-                    'teams' => $team,
-                    'showdebug' => true,
-                    'dumps' => $tickeData
+                    'teams' => $team
                 );
                 $this->model->close();
                 $this->twig->display('tickets/edit.html.twig', $data);
@@ -295,6 +304,11 @@ class Tickets extends BaseController {
         }
     }
 
+    /**
+     * Close ticket in database.
+     * Only a admin or a team member can acces
+     * @param int $idTicket. The ticket id in database
+     */
     public function close($idTicket) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
             $data = array(
@@ -342,6 +356,11 @@ class Tickets extends BaseController {
         }
     }
 
+    /**
+     * Reopen a ticket in database.
+     * Only a admin or a team member can acces
+     * @param int $idTicket. The ticket id in database
+     */
     public function reopen($idTicket) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
             $data = array(
