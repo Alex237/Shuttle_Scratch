@@ -11,19 +11,19 @@
         <div class="row">
             <div class="col-md-offset-2 col-md-4">
                 <div class="form-group">
-                    <input type="email" name="email" class="form-control input-lg" {{ setValue('email') }} placeholder="Email" required>
+                    <input type="email" name="email" class="form-control input-lg" value="{{ setValue('email') }}" placeholder="Email" required>
                     {{ formError('email') }}
                 </div>
                 <div class="form-group">
-                    <input type="text" name="company" class="form-control input-lg" {{ setValue('company') }} placeholder="Société">
+                    <input type="text" name="company" class="form-control input-lg" value="{{ setValue('company') }}" placeholder="Société">
                     {{ formError('company') }}
                 </div>
                 <div class="form-group">
-                    <input type="password" name="password" class="form-control input-lg" {{ setValue('password') }} placeholder="Mot de passe" required>
+                    <input type="password" name="password" class="form-control input-lg" value="{{ setValue('password') }}" placeholder="Mot de passe" required>
                     {{ formError('password') }}
                 </div>
                 <div class="form-group">
-                    <input type="password" name="confirm" class="form-control input-lg" {{ setValue('confirm') }} placeholder="Confirmation" required>
+                    <input type="password" name="confirm" class="form-control input-lg" value="{{ setValue('confirm') }}" placeholder="Confirmation" required>
                     {{ formError('confirm') }}
                 </div>
             </div>

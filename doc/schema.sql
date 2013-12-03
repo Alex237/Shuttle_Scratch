@@ -35,21 +35,9 @@ DROP TABLE IF EXISTS `Shuttle`.`TicketType` ;
 
 CREATE  TABLE IF NOT EXISTS `Shuttle`.`TicketType` (
   `idTicketType` INT NOT NULL AUTO_INCREMENT ,
-  `label` VARCHAR(45) NULL ,
+  `label` VARCHAR(45) NOT NULL ,
   `steps` TEXT NULL ,
   PRIMARY KEY (`idTicketType`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `Shuttle`.`Company`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `Shuttle`.`Company` ;
-
-CREATE  TABLE IF NOT EXISTS `Shuttle`.`Company` (
-  `idCompany` INT NOT NULL ,
-  `Name` VARCHAR(255) NOT NULL ,
-  PRIMARY KEY (`idCompany`) )
 ENGINE = InnoDB;
 
 
@@ -63,16 +51,20 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`Project` (
   `name` VARCHAR(255) NULL ,
   `createDate` DATETIME NULL ,
   `deadline` DATETIME NULL ,
-  `company` INT NOT NULL ,
-  PRIMARY KEY (`idProject`) ,
-  CONSTRAINT `fk_Project_company1`
-    FOREIGN KEY (`company` )
-    REFERENCES `Shuttle`.`Company` (`idCompany` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`idProject`) )
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Project_company1_idx` ON `Shuttle`.`Project` (`company` ASC) ;
+
+-- -----------------------------------------------------
+-- Table `Shuttle`.`ticketstatus`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Shuttle`.`ticketstatus` ;
+
+CREATE  TABLE IF NOT EXISTS `Shuttle`.`ticketstatus` (
+  `idStatus` INT NOT NULL AUTO_INCREMENT ,
+  `statusLabel` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`idStatus`) )
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -82,7 +74,7 @@ DROP TABLE IF EXISTS `Shuttle`.`Ticket` ;
 
 CREATE  TABLE IF NOT EXISTS `Shuttle`.`Ticket` (
   `idTicket` INT NOT NULL AUTO_INCREMENT ,
-  `type` INT NOT NULL ,
+  `type` INT NULL ,
   `step` INT NULL ,
   `openDate` DATETIME NULL ,
   `updateDate` DATETIME NULL ,
@@ -94,7 +86,8 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`Ticket` (
   `estimatedTime` INT NULL ,
   `title` VARCHAR(255) NOT NULL ,
   `content` TEXT NULL ,
-  `project` INT NOT NULL ,
+  `project` INT NULL ,
+  `status` INT NOT NULL ,
   PRIMARY KEY (`idTicket`) ,
   CONSTRAINT `fk_Ticket_TicketType`
     FOREIGN KEY (`type` )
@@ -115,6 +108,11 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`Ticket` (
     FOREIGN KEY (`openBy` )
     REFERENCES `Shuttle`.`User` (`idUser` )
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Ticket_ticketstatus1`
+    FOREIGN KEY (`status` )
+    REFERENCES `Shuttle`.`ticketstatus` (`idStatus` )
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -126,6 +124,8 @@ CREATE INDEX `fk_Ticket_Project1_idx` ON `Shuttle`.`Ticket` (`project` ASC) ;
 
 CREATE INDEX `fk_Ticket_User1_idx` ON `Shuttle`.`Ticket` (`openBy` ASC) ;
 
+CREATE INDEX `fk_Ticket_ticketstatus1_idx` ON `Shuttle`.`Ticket` (`status` ASC) ;
+
 
 -- -----------------------------------------------------
 -- Table `Shuttle`.`Role`
@@ -135,6 +135,18 @@ DROP TABLE IF EXISTS `Shuttle`.`Role` ;
 CREATE  TABLE IF NOT EXISTS `Shuttle`.`Role` (
   `label` VARCHAR(45) NOT NULL ,
   PRIMARY KEY (`label`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Shuttle`.`Company`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Shuttle`.`Company` ;
+
+CREATE  TABLE IF NOT EXISTS `Shuttle`.`Company` (
+  `idCompany` INT NOT NULL ,
+  `Name` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`idCompany`) )
 ENGINE = InnoDB;
 
 USE `Shuttle` ;

@@ -9,7 +9,6 @@
     <error rule="match" message="Les champs ne correspondent pas"/>
     <error rule="ip" message="Cette adresse ip n'est pas valide"/>
     <error rule="email" message="Cette adresse email n'est pas valide"/>
-    <error rule="uniqueEmail" message="Cette adresse email est déjà allouée"/>
     <error rule="length" message="Le champ %f doit faire %p caractères"/>
     <error rule="greater" message="Le champ %f doit être plus grand que %p"/>
     <error rule="lesser" message="Le champ %f doit être plus petit que %p"/>

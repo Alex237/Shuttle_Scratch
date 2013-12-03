@@ -1,4 +1,4 @@
-{% extends "user/users.html.twig" %}
+{% extends "user/user.html.twig" %}
 
 {% block content %}
 <div class="container">
@@ -10,18 +10,18 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ setValue('email')|raw }}" placeholder="account@acme.com" maxlength="255" required>
-                            {{ formError('email')|raw }}
+                            <input type="email" class="form-control" id="email" name="email" value="{{ setValue('email') }}" placeholder="account@acme.com" maxlength="255" required>
+                            {{ formError('email') }}
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ setValue('firstname')|raw }}" placeholder="Prénom" maxlength="45">
-                            {{ formError('firstname')|raw }}
+                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ setValue('firstname') }}" placeholder="Prénom" maxlength="45">
+                            {{ formError('firstname') }}
                         </div>
                         <div class="form-group col-md-6">
-                            <input type="text" class="form-control" id="lastname" name="lastname" value="{{ setValue('lastname')|raw }}" placeholder="Nom" maxlength="45">
-                            {{ formError('lastname')|raw }}
+                            <input type="text" class="form-control" id="lastname" name="lastname" value="{{ setValue('lastname') }}" placeholder="Nom" maxlength="45">
+                            {{ formError('lastname') }}
                         </div>
                     </div>
 
@@ -39,10 +39,10 @@
                 <section class="well">
                     <h3>Roles</h3>
                     <div class="form-group">
-                        <select class="form-control" id="roles" name="role[]" multiple>
-                            <option value="">Client</option>
-                            <option value="">Equipe</option>
-                            <option value="">Admin</option>
+                        <select class="form-control" id="roles" name="roles[]" multiple>
+                            <option value="client">Client</option>
+                            <option value="team">Equipe</option>
+                            <option value="admin">Admin</option>
                         </select>
                     </div>
                 </section>

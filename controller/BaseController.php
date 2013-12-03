@@ -31,13 +31,20 @@ abstract class BaseController
      * @var \Session
      */
     protected $session;
+    
+    /**
+     * The form validator
+     * 
+     * @var \Validator
+     */
+    protected $validator = null;
 
     /**
      * The alerts messages
      * 
      * @var array
      */
-    protected $alerts;
+    protected $alerts = array();
 
     /**
      * Construct
@@ -70,18 +77,21 @@ abstract class BaseController
     /**
      * The controller index
      * 
+     * @abstract
      */
     abstract public function index();
 
     /**
      * Add an entity
      * 
+     * @abstract
      */
     abstract public function add();
 
     /**
      * Display an entity from its id
      * 
+     * @abstract
      * @param int $id The entity id
      */
     abstract public function show($id);
@@ -89,6 +99,7 @@ abstract class BaseController
     /**
      * Edit an entity from its id
      * 
+     * @abstract
      * @param int $id The entity id
      */
     abstract public function edit($id);
@@ -96,8 +107,8 @@ abstract class BaseController
     /**
      * Delete an entity from its id
      * 
+     * @abstract
      * @param int $id The entity id
-     * @return void
      */
     abstract public function delete($id);
 
@@ -108,6 +119,11 @@ abstract class BaseController
      * @param string $request The inner-domain request uri
      */
     protected function redirect($request) {
+
+        if ($this->model != null) {
+            $this->model->close();
+        }
+
         if (substr($request, 0, 7) == 'http://') {
             header('location: ' . $request);
         } else {
@@ -120,15 +136,19 @@ abstract class BaseController
     /**
      * Restrict access to a logged user with specific role
      * 
-     * 0/ Check if the required role is granted
-     * 1/ Add a flash message
-     * 2/ Redirect to the http_referer
+     * 0/ Check if the user session is open. If not redirect to login
+     * 1/ Then check the if required role is granted
+     * 2/ Add a flash message
+     * 3/ Redirect to the http_referer
      * 
      * @return void
      */
     protected function restrict($role = null) {
-        if (!$this->session->isGranted($role)) {
-            $this->session->addFlash('<div class="alert alert-danger"><i class="fa-minus-circle"></i>&nbsp;Cette action est interdite !</div>', 'danger');
+
+        if (!$this->session->existSessionData()) {
+            $this->redirect('/login');
+        } elseif (!$this->session->isGranted($role)) {
+            $this->session->addFlash('Cette action est interdite !', 'danger');
             $this->redirect($_SERVER['HTTP_REFERER']);
         }
     }
@@ -136,31 +156,15 @@ abstract class BaseController
     /**
      * Create an alert message and allow Twig to access them
      * 
-     * 0/ Look for the icon to use
      * 1/ Build the alert message
      * 2/ Update the Twig environment
      * 
      * @param string $message The alert message
      * @param string $type The alert type
-     * @return string
+     * @return void
      */
     protected function alert($message, $type = 'info') {
-        switch ($type) {
-            case 'success' :
-                $icon = 'fa-check-circle';
-                break;
-            case 'warning' :
-                $icon = 'fa-exclamation-triangle';
-                break;
-            case 'danger' :
-                $icon = 'fa-minus-circle';
-                break;
-            default :
-                $icon = 'fa-exclamation-circle';
-                $type = 'info';
-        }
-
-        $this->alerts[$type] = '<div class="alert alert-' . $type . '"><i class="' . $icon . '"></i>&nbsp;' . $message . '</div>';
+        $this->alerts[$type] = $message;
         $this->twig->addGlobal('alerts', $this->alerts);
     }
 
@@ -171,9 +175,9 @@ abstract class BaseController
     private function extend() {
         $functions[] = new Twig_SimpleFunction('setValue', function ($input, $default = null) {
                     if (isset($_POST[$input])) {
-                        echo 'value="' . $_POST[$input] . '"';
+                        echo $_POST[$input];
                     } elseif (!is_null($default)) {
-                        echo 'value="' . $default . '"';
+                        echo $default;
                     }
                 });
 
@@ -182,9 +186,8 @@ abstract class BaseController
                 });
 
         $functions[] = new Twig_SimpleFunction('formError', function ($field, $html = true) {
-                    if (class_exists('Validator')) {
-                        $validator = Validator::getInstance();
-                        if (($message = $validator->getError($field)) != FALSE) {
+                    if ($this->validator instanceof \Validator) {
+                        if (($message = $this->validator->getError($field)) != FALSE) {
                             if ($html) {
                                 echo '<div class="input-error">' . $message . '</div>';
                             } else {
@@ -195,9 +198,8 @@ abstract class BaseController
                 });
 
         $functions[] = new Twig_SimpleFunction('hasError', function ($field) {
-                    if (class_exists('Validator')) {
-                        $validator = Validator::getInstance();
-                        return $validator->hasError($field);
+                    if ($this->validator instanceof \Validator) {
+                        return $this->validator->hasError($field);
                     }
                 });
 
@@ -207,8 +209,8 @@ abstract class BaseController
                     }
                 });
 
-        $functions[] = new Twig_SimpleFunction('isGranted', function() {
-                    return true;
+        $functions[] = new Twig_SimpleFunction('isGranted', function($role = null) {
+                    return $this->session->isGranted($role);
                 });
 
         foreach ($functions as $function) {

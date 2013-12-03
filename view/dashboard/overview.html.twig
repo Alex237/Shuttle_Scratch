@@ -4,104 +4,104 @@
 
 {% block content %}
 <div class="container">
-	<div class="row">
+    <div class="row">
         <div class="col-md-6">
             <section class="well">
                 <h3>Derniers tickets</h3>
-				<div class="table-responsive">
-					<table class="table table-hover table-striped">
-						<tr>
-							<th># Ticket</th>
-							<th>Titre</th>
-							<th>Auteur</th>
-						</tr>
-                {% for i in 1..4 %}
-						<tr>
-							<td>#{{ i }}</td>
-							<td><a href="{{ domain() }}tickets/{{ i }}/show">Titre ticket</a></td>
-							<td><a href="{{ domain() }}user/{{ i }}/show">Auteurs</a></td>
-						</tr>
-                {% endfor %}
-					</table>
-				</div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <tr>
+                            <th># Ticket</th>
+                            <th>Titre</th>
+                            <th>Auteur</th>
+                        </tr>
+                        {% for i in 1..4 %}
+                        <tr>
+                            <td>#{{ i }}</td>
+                            <td><a href="{{ domain() }}tickets/{{ i }}/show">Titre ticket</a></td>
+                            <td><a href="{{ domain() }}user/{{ i }}/show">Auteurs</a></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </section>
         </div>
-		<div class="col-md-6">
-			<section class="well">
+        <div class="col-md-6">
+            <section class="well">
                 <h3>
-					<i class="fa-user"></i> 
-					Bienvenue {{ [userData.lastname, userData.firstname]|join(' ')}} 
-					<div class="pull-right"> 
-						<a href="{{ domain() }}user/{{ userData.idUser }}/delete"><i class="fa-times"></i> &nbsp;</a>
-					</div>
-					<div class="pull-right"> 
-						<a href="{{ domain() }}user/{{ userData.idUser }}/edit"><i class="fa-edit"></i> &nbsp;</a>
-					</div>
-				</h3>
-				<div class="page-header-min"><b>Informations : </b></div>
-				<div class="clearfix"></div>
-				<div class="row">
-					<div class="col-lg-4">
-						<a href="mailto:{{ userData.email}}" target="_top"><i class="fa-envelope"></i> {{ userData.email}}</a>
-					</div>
-					<div class="col-md-4"><i class="fa-suitcase"></i>{% if userData.company == 0 %} - - {% else %}{{ userData.company|capitalize}}{% endif %} </div>
-					<div class="col-md-4"><i class="fa-sitemap"></i> {{ userData.roles|join(', ')}}</div>
-				</div>
-				<br />
-				<div class="row">
-					<div class="col-lg-6">
-						<div class="page-header-min"><b>Mes ticket :</b></div>
-						<p>Vous avez -- ticket(s) en cours</p>
-					</div>
-					<div class="col-lg-6">
-						<div class="page-header-min"><b>Tickets traités :</b></div>
-						<p>Vous avez -- ticket(s) taité(s) <br/>sur -- ticket(s) en cours</p>
-					</div>
-				</div>
-			</section>
-		</div>
+                    <i class="fa-user"></i> 
+                    Bienvenue {{ [userData.lastname, userData.firstname]|join(' ')}} 
+                    <div class="pull-right"> 
+                        <a href="{{ domain() }}user/{{ userData.idUser }}/delete"><i class="fa-times"></i></a>
+                    </div>
+                    <div class="pull-right"> 
+                        <a href="{{ domain() }}user/{{ userData.idUser }}/edit"><i class="fa-edit"></i></a>
+                    </div>
+                </h3>
+                <div class="page-header-min"><b>Informations : </b></div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <a href="mailto:{{ userData.email}}" target="_top"><i class="fa-envelope"></i> {{ userData.email}}</a>
+                    </div>
+                    <div class="col-md-4"><i class="fa-suitcase"></i>{% if userData.company == 0 %} - - {% else %}{{ userData.company|capitalize}}{% endif %}</div>
+                    <div class="col-md-4"><i class="fa-sitemap"></i> {{ userData.roles|join(', ')}}</div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="page-header-min"><b>Mes ticket :</b></div>
+                        <p>Vous avez -- ticket(s) en cours</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="page-header-min"><b>Tickets traités :</b></div>
+                        <p>Vous avez -- ticket(s) taité(s) <br/>sur -- ticket(s) en cours</p>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
     <div class="row">
-		<div class="col-md-9">
-			<section class="well">
-				<h3>Statistiques</h3>
-				<div class="row">
-					<div class="col-md-6">
-						chart1
-					</div>
-					<div class="col-md-6">
-						chart 2
-					</div>
-				</div>
-			</section>
-		</div>
-		<div class="col-md-3">
-			<section class="well">
-				<h3>Aide ?</h3>
-			</section>
-		</div>
-	</div>
+        <div class="col-md-9">
+            <section class="well">
+                <h3>Statistiques</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        chart1
+                    </div>
+                    <div class="col-md-6">
+                        chart 2
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-3">
+            <section class="well">
+                <h3>Aide ?</h3>
+            </section>
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% block extras %}
 
 <div id="home-demo">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="page-header">
-					<h3>Qu'est ce que Shuttle ?</h3>
-				</div>
-				<p>
-					Shuttle est une solution web libre de gestion de Support. Il est destiné à des services de HelpDesk, multi-techniciens ou pas.
-					Cette outil permet de centraliser, classifier, vos demandes et incidents par l'intermédiaire de tickets, 
-					vous permettant ainsi d'informer en temps réel vos collaborateurs.
-					<br />
-					Au fur et à mesure de la création de vos incidents vous mettez en place une base de connaissance, 
-					qui vous permettra de trouver rapidement des réponses à vos demandes.
-				</p>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h3>Qu'est ce que Shuttle ?</h3>
+                </div>
+                <p>
+                    Shuttle est une solution web libre de gestion de Support. Il est destiné à des services de HelpDesk, multi-techniciens ou pas.
+                    Cette outil permet de centraliser, classifier, vos demandes et incidents par l'intermédiaire de tickets, 
+                    vous permettant ainsi d'informer en temps réel vos collaborateurs.
+                    <br />
+                    Au fur et à mesure de la création de vos incidents vous mettez en place une base de connaissance, 
+                    qui vous permettra de trouver rapidement des réponses à vos demandes.
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
