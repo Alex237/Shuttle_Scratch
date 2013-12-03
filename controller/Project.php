@@ -27,7 +27,7 @@ class Project extends BaseController
     public function index() {
         $this->model->init();
 
-        $this->twig->display('project/overview.html.twig', array(
+        $this->twig->display('project/project.html.twig', array(
             'projects' => $this->model->loadAll()
         ));
 
@@ -87,8 +87,25 @@ class Project extends BaseController
         
     }
 
-    public function show($id) {
-        
+    /**
+     * Display a project from its id
+     * 
+     * @param int $idProject The project id
+     */
+    public function show($idProject) {
+        $this->model->init();
+
+        $project = $this->model->loadById($idProject);
+        if (empty($project)) {
+            $this->redirect('/project');
+        }
+
+        $this->twig->display('project/show.html.twig', array(
+            'project' => $project,
+            'tickets' => $this->model->loadProjectTickets($idProject)
+        ));
+
+        $this->model->close();
     }
 
 }

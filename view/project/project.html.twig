@@ -1,0 +1,48 @@
+{% extends "layout.html.twig" %}
+
+{% set navtab = 'project' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <section class="well">
+                <h3>Projets</h3>
+                {% if projects %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <tr>
+                            <th width="20"><input type="checkbox"></th>
+                            <th>#</th>
+                            <th>Nom</th>
+                            <th>Deadline</th>
+                            <th>Société</th>
+                            <th></th>
+                        </tr>
+                        {% for project in projects %}
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>{{ project.idProject }}</td>
+                            <td><a href="{{ domain() }}project/{{ project.idProject }}/show">{{ project.name }}</a></td>
+                            <td><a href="{{ domain() }}project/{{ project.idProject }}/show">{{ project.deadline|date('l, d F Y - H:i:s') }}</a></td>
+                            <td><a href="{{ domain() }}company/{{ project.company }}/show">{{ project.company }}</a></td>
+                            <td align="right">
+                                <a href="{{ domain() }}project/{{ project.idProject }}/show"><i class="fa-eye"></i></a>
+                                <a href="{{ domain() }}project/{{ project.idProject }}/edit"><i class="fa-edit"></i></a>
+                                <a href="{{ domain() }}project/{{ project.idProject }}/delete"><i class="fa-times"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">Aucun projet</div>
+                {% endif %}
+            </section>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-lg btn-block btn-primary" href="{{ domain() }}project/add"><i class="fa-plus"></i>&nbsp;Nouveau</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

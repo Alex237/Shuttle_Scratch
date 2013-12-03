@@ -11,7 +11,7 @@ require_once './model/BaseModel.php';
  */
 class ProjectModel extends BaseModel
 {
-    
+
     /**
      * Construct
      * 
@@ -19,7 +19,7 @@ class ProjectModel extends BaseModel
     public function __construct() {
         parent::__construct('project', 'idProject');
     }
-    
+
     /**
      * Check if a project exists
      * 
@@ -37,5 +37,20 @@ class ProjectModel extends BaseModel
         return !empty($result);
     }
 
-}
+    /**
+     * 
+     * @param type $idProject
+     * @return type
+     */
+    public function loadProjectTickets($idProject) {
+        $sql = $this->select()
+                ->from(array('ticket'))
+                ->where(array('project' . ' = :idProject'))
+                ->buildQuery();
 
+        $loadProjectTickets = $this->db->prepare($sql);
+        $loadProjectTickets->execute(array(':idProject' => $idProject));
+        return $loadProjectTickets->fetchAll();
+    }
+
+}

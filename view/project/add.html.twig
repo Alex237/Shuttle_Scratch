@@ -1,4 +1,4 @@
-{% extends "project/overview.html.twig" %}
+{% extends "project/project.html.twig" %}
 
 {% block content %}
 <div class="container">
@@ -7,21 +7,31 @@
             <section class="well">
                 <h3>Nouveau projet</h3>
                 <form role="form" method="post">
-                    <div class="form-group">
-                        <label for="name" class="control-label">Nom du projet</label>
-                        <input type="text" name="name" class="form-control" id="name" placeholder="Nouveau projet" value="{{ setValue('name') }}" maxlength="255" required>
-                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name" class="control-label">Nom du projet</label>
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Nouveau projet" value="{{ setValue('name') }}" maxlength="255" required>
+                            </div>
                     {{ formError('name') }}
-                    <div class="form-group">
-                        <label for="deadline"><b>Date de fin</b></label>
-                        <div class="input-group">
-                            <input type="text" class="form-control datepicker" id="deadline" name="deadline" value="{{ setValue('deadline') }}"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default"><i class="fa-calendar-o"></i></button>
-                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="deadline">Date de fin</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="deadline" name="deadline" value="{{ setValue('deadline') }}"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa-calendar-o"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                    {{ formError('deadline') }}
                         </div>
                     </div>
-                    {{ formError('deadline') }}
+                    <div class="form-group">
+                        <label for="content">Description</label>
+                        <textarea class="form-control" name="content" id="content">{{ setValue('content') }}</textarea>
+                    </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Ajouter</button>
                     </div>
@@ -30,12 +40,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block pagescripts %}
-<script type="text/javascript">
-    jQuery(document).ready(function($) {
-        $('.datepicker').datepicker();
-    });
-    </script>
 {% endblock %}

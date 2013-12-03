@@ -29,7 +29,7 @@ class User extends BaseController
         $this->restrict('team');
         $this->model->init();
 
-        $this->twig->display('user/users.html.twig', array(
+        $this->twig->display('user/user.html.twig', array(
             'users' => $this->model->loadAll()
         ));
 
@@ -43,7 +43,7 @@ class User extends BaseController
     public function login() {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
-            
+
             $this->validator = new Validator();
             $this->validator->addRules('email', 'required|email')
                     ->addRules('password', 'required');
@@ -250,7 +250,8 @@ class User extends BaseController
 
                 $email = strtolower($_POST['email']);
                 $user = $this->model->loadByEmail($email);
-                if (empty($user)) {
+
+                if (!empty($user)) {
 
                     $this->validator->addCustomError('email', 'Cette adresse email est déjà allouée');
                 } else {

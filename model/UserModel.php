@@ -70,7 +70,7 @@ class UserModel extends BaseModel
                 ->buildQuery();
         $existeEmail = $this->db->prepare($sql);
         $existeEmail->execute(array(':email' => $email));
-        
+
         return $existeEmail->fetch();
     }
 

@@ -1,4 +1,5 @@
 Shuttle
 =======
 
-Le logiciel Shuttle est un gestionnaire de ticket conçu dans le but d’être utilisé par n’importe quelle organisation cherchant une manière performante de réceptionner, suivre et résoudre des demandes d’assistantes ou d’interventions de ses clients, qu’ils soient internes ou externes à l’organisation.
+Shuttle est une solution web libre de gestion de Support. Il est destiné à des services de HelpDesk, multi-techniciens ou pas. Cette outil permet de centraliser, classifier, vos demandes et incidents par l'intermédiaire de tickets, vous permettant ainsi d'informer en temps réel vos collaborateurs.
+Au fur et à mesure de la création de vos incidents vous mettez en place une base de connaissance, qui vous permettra de trouver rapidement des réponses à vos demandes. 

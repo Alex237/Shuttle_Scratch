@@ -23,7 +23,7 @@
     <route pattern="/company/(\d+)/delete" controller="company" action="delete" params="id" />
         
     <route pattern="/ticket" controller="tickets" action="index"/>
-    <route pattern="/ticket/add" controller="tickets" action="add"/>
+    <route pattern="/ticket/add(?:/(\d+))?" controller="tickets" action="add" params="project"/>
     <route pattern="/ticket/create" controller="tickets" action="add"/>
     <route pattern="/ticket/(\d+)/show" controller="tickets" action="show" params="id" />
     <route pattern="/ticket/(\d+)/edit" controller="tickets" action="edit" params="id" />
