@@ -85,10 +85,14 @@
                 <section class="well">
                     <h3><b>Projet</b></h3>
                     <label for="type"><b>Projet associé</b></label>
-                    <select class="form-control" id="type" name="idProjet" {{ setValue('idProjet') }}>
+                    <select class="form-control" id="type" name="idProjet" >
                         <option value="">Choisir un projet</option>
 						{% for projet in projets %}
-                        <option value="{{ projet.idProject }}" {{ set_select('idProjet', projet.idProject) }}>{{ projet.name|capitalize }}</option>
+                            {% if (projet.idProject == ticket.project) %}
+                            <option value="{{ projet.idProject }}" selected="selected">{{ projet.name|capitalize }}</option>
+                            {% else %}
+                            <option value="{{ projet.idProject }}" {{ set_select('idProjet', projet.idProject) }}>{{ projet.name|capitalize }}</option>
+                            {% endif %}
 						{% endfor %}
                     </select>
 					{{ formError('idProjet') }}
@@ -101,7 +105,12 @@
                         <select class="form-control" id="exampleInputPassword1" name="assignedTo" {{ setValue('assignedTo') }}>
                             <option value="">Choisir un membre d'équipe</option>
 							{% for teamMember in teams %}
+                            {% if (teamMember.idUser == ticket.assignedTo) %}
+                            <option value="{{ teamMember.idUser }}" selected="selected">{{ [teamMember.lastname|capitalize, teamMember.firstname|capitalize]|join(' ') }}</option>
+                            {% else %}
                             <option value="{{ teamMember.idUser }}" {{ set_select('assignedTo', teamMember.idUser) }}>{{ [teamMember.lastname|capitalize, teamMember.firstname|capitalize]|join(' ') }}</option>
+
+                            {% endif %}
 							{% endfor %}
                         </select>
 						{{ formError('assignedTo') }}
@@ -111,13 +120,13 @@
                     <h3><b> Status :</b></h3>
                     <select class="form-control" id="statusCange" name="statusCange">
                         <option value="">Choisir un status</option>
-                        <option selected="selected" value="1">Nouveau</option>
-                        <option value="2">Résolu</option>
-                        <option value="3">Invalide</option>
-                        <option value="4">Non pris en compte</option>
-                        <option value="5">Existe déjà</option>
-                        <option value="6">Fonctionnel</option>
-                        <option value="7">Ne peut être résolu</option>
+                        <option {% if (ticket.level == 1) %}selected="selected"{% endif %} value="1">Nouveau</option>
+                        <option {% if (ticket.level == 2) %}selected="selected"{% endif %} value="2">Résolu</option>
+                        <option {% if (ticket.level == 3) %}selected="selected"{% endif %} value="3">Invalide</option>
+                        <option {% if (ticket.level == 4) %}selected="selected"{% endif %} value="4">Non pris en compte</option>
+                        <option {% if (ticket.level == 5) %}selected="selected"{% endif %} value="5">Existe déjà</option>
+                        <option {% if (ticket.level == 6) %}selected="selected"{% endif %} value="6">Fonctionnel</option>
+                        <option {% if (ticket.level == 7) %}selected="selected"{% endif %} value="7">Ne peut être résolu</option>
                     </select>
                 </section>
             </div>

@@ -5,32 +5,57 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <section class="well">
                 <h3>Mes tickets</h3>
-                {% for ticket in ticketAssignedToMe %}
-                <p><a href="tickets/{{ ticket.idTicket }}/show">#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</a></p>
-                {% else %}
-                <div class="alert alert-warning">Aucun ticket ne vous est assigné</div>
-                {% endfor %}
-
-                {% for ticket in ticketOpenByMe %}
-                <p>#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</p>
-                {% else %}
-                <div class="alert alert-warning">Vous n'avez ouvert aucun ticket</div>
-                {% endfor %}
-
+                <div class="row">
+                    <div class="col-md-3">
+                            <h5><b>Assigné : </b></h5>
+                            {% for ticket in ticketAssignedToMe %}
+                            <p><a href="tickets/{{ ticket.idTicket }}/show">#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</a></p>
+                            {% else %}
+                            <div class="alert alert-warning">Aucun ticket ne vous est assigné</div>
+                            {% endfor %}
+                    </div>
+                    <div class="col-md-3">
+                            <h5><b>Ouvert : </b></h5>
+                            {% for ticket in ticketOpenByMe %}
+                            <p>#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</p>
+                            {% else %}
+                            <div class="alert alert-warning">Vous n'avez ouvert aucun ticket</div>
+                            {% endfor %}
+                    </div>
+                    <div class="col-md-3">
+                            <h5><b>Traité : </b></h5>
+                            {% for ticket in ticketOpenByMe %}
+                            <p>#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</p>
+                            {% else %}
+                            <div class="alert alert-warning">Vous n'avez traité aucun ticket</div>
+                            {% endfor %}
+                    </div>
+                    <div class="col-md-3">
+                            <h5><b>Total : </b></h5>
+                            <div class="alert alert-warning">NULL</div>
+                    </div>
+                </div>
             </section>
         </div>
-        <div class="col-md-2">
+        <!--div class="col-md-2">
             <a class="btn btn-lg btn-block btn-primary" href="{{ domain() }}tickets/create">Ouvrir un ticket</a>
-        </div>
+            <br />
+        </div-->
     </div>
-
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <section class="well">
-                <h3>Derniers tickets ouvert</h3>
+                <h3><b>Derniers tickets</b></h3>
+                <div class="row">
+                    <div class="col-md-offset-8 col-md-4">
+                        <a class="btn btn-lg btn-block btn-primary" href="{{ domain() }}tickets/create"> Ouvrir un ticket </a>
+                        <br />
+                    </div>
+                </div>
+                <div class="clearfix"></div>
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
                         <tr>
@@ -54,11 +79,56 @@
                                 <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/delete"><i class="fa-times"></i></a>
                             </td>
                         </tr>
+                        {% else %}
+                        <div class="alert alert-warning">Aucun existant</div>
                         {% endfor %}
                     </table>
                 </div>
+                <ul class="pager">
+                    <li class="previous disabled"><a href="#">«</a></li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li class="next"><a href="#">»</a></li>
+                </ul>
             </section>
         </div>
+        <!--div class="col-md-2">
+            <section class="well">
+                <h3> <b>Statistiques</b> 
+                    <div class="pull-right">
+                        <i class="fa-caret-square-o-down"></i>&nbsp;
+                    </div>
+                </h3>
+                <div class="alert alert-info">Empty !</div>
+                <h3><b>Status</b> 
+                    <div class="pull-right">
+                        <i class="fa-caret-square-o-down"></i>&nbsp;
+                    </div>
+                </h3>
+                <div class="alert alert-info">Empty !</div>
+                <h3>Types</b> 
+                    <div class="pull-right">
+                        <i class="fa-caret-square-o-down"></i>&nbsp;
+                    </div>
+                </h3>
+                <div class="alert alert-info">Empty !</div>
+                <h3><b>Dépassée</b> 
+                    <div class="pull-right">
+                        <i class="fa-caret-square-o-down"></i>&nbsp;
+                    </div>
+                </h3>
+                <div class="alert alert-info">Empty !</div>
+                <h3><b>Traité</b> 
+                    <div class="pull-right">
+                        <i class="fa-caret-square-o-down"></i>&nbsp;
+                    </div>
+                </h3>
+                <div class="alert alert-info">Empty !</div>
+            </section>
+        </div -->
     </div>
 </div>
 {% endblock %}
