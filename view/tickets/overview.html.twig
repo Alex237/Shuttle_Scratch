@@ -7,43 +7,30 @@
     <div class="row">
         <div class="col-md-12">
             <section class="well">
-                <h3>Mes tickets</h3>
+                <h3>Statistiques</h3>
                 <div class="row">
                     <div class="col-md-3">
-                            <h5><b>Assigné : </b></h5>
-                            {% for ticket in ticketAssignedToMe %}
-                            <p><a href="tickets/{{ ticket.idTicket }}/show">#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</a></p>
-                            {% else %}
-                            <div class="alert alert-warning">Aucun ticket ne vous est assigné</div>
-                            {% endfor %}
+                        <div class="page-header">
+                            <h1>{{ totalTicket }} <small>ticket(s)</small></h1>
+                        </div>
                     </div>
                     <div class="col-md-3">
-                            <h5><b>Ouvert : </b></h5>
-                            {% for ticket in ticketOpenByMe %}
-                            <p>#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</p>
-                            {% else %}
-                            <div class="alert alert-warning">Vous n'avez ouvert aucun ticket</div>
-                            {% endfor %}
+                        <canvas id="totalChart" width="160" height="160"></canvas>
                     </div>
-                    <div class="col-md-3">
-                            <h5><b>Traité : </b></h5>
-                            {% for ticket in ticketOpenByMe %}
-                            <p>#{{ ticket.idTicket }}&nbsp;{{ ticket.title }}</p>
-                            {% else %}
-                            <div class="alert alert-warning">Vous n'avez traité aucun ticket</div>
-                            {% endfor %}
-                    </div>
-                    <div class="col-md-3">
-                            <h5><b>Total : </b></h5>
-                            <div class="alert alert-warning">NULL</div>
+                    <div class="col-md-offset-1 col-md-4">
+                         <div class="row">
+                             <div class="col-md-12"><h5><b>Légende : </b></h5></div>
+                         </div>
+                            <ul>
+                                <li>Type 1</li>
+                                <li>Type 2</li>
+                                <li>Type 3</li>
+                                <li>Type 4</li>
+                            </ul>
                     </div>
                 </div>
             </section>
         </div>
-        <!--div class="col-md-2">
-            <a class="btn btn-lg btn-block btn-primary" href="{{ domain() }}tickets/create">Ouvrir un ticket</a>
-            <br />
-        </div-->
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -63,7 +50,7 @@
                             <th>Titre</th>
                             <th>Auteur</th>
                             <th>Satus</th>
-                            <th>Assigné à</th>
+                            <th>Assigné à </th>
                             <th style="width: 40px;">Actions</th>
                         </tr>
                         {% for ticket in ticketList %}
@@ -95,40 +82,10 @@
                 </ul>
             </section>
         </div>
-        <!--div class="col-md-2">
-            <section class="well">
-                <h3> <b>Statistiques</b> 
-                    <div class="pull-right">
-                        <i class="fa-caret-square-o-down"></i>&nbsp;
-                    </div>
-                </h3>
-                <div class="alert alert-info">Empty !</div>
-                <h3><b>Status</b> 
-                    <div class="pull-right">
-                        <i class="fa-caret-square-o-down"></i>&nbsp;
-                    </div>
-                </h3>
-                <div class="alert alert-info">Empty !</div>
-                <h3>Types</b> 
-                    <div class="pull-right">
-                        <i class="fa-caret-square-o-down"></i>&nbsp;
-                    </div>
-                </h3>
-                <div class="alert alert-info">Empty !</div>
-                <h3><b>Dépassée</b> 
-                    <div class="pull-right">
-                        <i class="fa-caret-square-o-down"></i>&nbsp;
-                    </div>
-                </h3>
-                <div class="alert alert-info">Empty !</div>
-                <h3><b>Traité</b> 
-                    <div class="pull-right">
-                        <i class="fa-caret-square-o-down"></i>&nbsp;
-                    </div>
-                </h3>
-                <div class="alert alert-info">Empty !</div>
-            </section>
-        </div -->
     </div>
 </div>
+{% endblock %}
+{% block pagescripts %}
+<script src="{{ domain() }}asset/js/Chart.min.js"></script>
+<script src="{{ domain() }}asset/js/worker-ticket-stats.js"></script>
 {% endblock %}
