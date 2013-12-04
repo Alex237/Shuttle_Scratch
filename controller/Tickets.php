@@ -12,7 +12,7 @@ class Tickets extends BaseController {
     /**
      * Constructor
      * 
-     * Load model and allox acces for logged person
+     * Load model and allow acces for logged person
      */
     public function __construct() {
         parent::__construct("TicketsModel");
@@ -30,7 +30,7 @@ class Tickets extends BaseController {
         $totalTicket = $this->model->countAllTickets();
         $data = array(
             'ticketList' => $ticketList,
-            'totalTickete' => $totalTicket
+            'totalTicket' => $totalTicket,
         );
         $this->model->close();
         $this->twig->display('tickets/overview.html.twig', $data);
@@ -40,7 +40,7 @@ class Tickets extends BaseController {
      * add view
      * This will Load view to create a new ticket
      */
-    public function add() {
+    public function add($idProject = NULL) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
             require_once './core/validator.php';
             $validator = new Validator();
@@ -98,7 +98,8 @@ class Tickets extends BaseController {
         $data = array(
             'types' => $types,
             'projets' => $projets,
-            'teams' => $team
+            'teams' => $team,
+            'idProject'=>$idProject
         );
         $this->model->close();
         $this->twig->display('tickets/create.html.twig', $data);

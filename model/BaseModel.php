@@ -262,7 +262,7 @@ abstract class BaseModel
 
         if (!is_null($table) and !is_null($ref)) {
 
-            $this->query['join'] .= ' JOIN ' . $table . ' ON ' . $ref;
+            $this->query['join'] .= ' LEFT JOIN ' . $table . ' ON ' . $ref;
         }
 
         return $this;
