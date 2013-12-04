@@ -17,9 +17,9 @@ class TicketsModel extends BaseModel {
     }
 
     /**
-     * 
-     * @param type $offset
-     * @param type $limit
+     * Load all tickets in database
+     * @param int $offet The query offset
+     * @param int $limit The query limit
      */
     public function loadAllTickets($offset = 0, $limit = 0) {
         $query = $this->select(array(
@@ -42,11 +42,12 @@ class TicketsModel extends BaseModel {
     }
 
     /**
-     * 
-     * @param int $idUser
-     * @return array
+     * Load ticket with ID as parameter
+     * @param int $id the ticket ID 
+     * @param string $columns not use in This Model
+     * @return array Associative array of databes value
      */
-    public function loadById($idTicket, $columns = null) {
+    public function loadById($id, $columns = null) {
         $query = $this->select(array(
                             $this->table . '.*',
                             'u.*',
@@ -62,29 +63,50 @@ class TicketsModel extends BaseModel {
                         ->join('user u2', 'u2.idUser = ' . $this->table . '.assignedTo')
                         ->where(array($this->primaryKey . ' = :idTicket'))->buildQuery();
         $result = $this->db->prepare($query);
-        $result->execute(array(':idTicket' => $idTicket));
+        $result->execute(array(':idTicket' => $id));
         return $result->fetch();
     }
 
     /**
-     * 
-     * @param int $idUser
-     * @return array
+     * Load tickets open by an user
+     * @param int $idUser the id User
+     * @return array Associative array of databes value
      */
     public function loadTicketsOpenBy($idUser) {
-        /* $query = $this->db->select()
-          ->from($this->table_name)
-          ->where('openBy', $idUser);
-
-          return $query->get()->result(); */
+        $query = $this->select()
+                        ->from(array($this->table))
+                        ->where(array('openBy = :openBy'))->buildQuery();
+        $result = $this->db->prepare($query);
+        $result->execute(array(':openBy' => $idUser));
+        return $result->fetch();
     }
-
+    
+    /**
+     * Load ticket open by an user
+     * @param int $idUser the id User
+     * @return array Associative array of databes value
+     */
+    public function countTicketsOpenBy($idUser) {
+        $query = $this->select(array('COUNT(*)'))
+                        ->from(array($this->table))
+                        ->where(array('openBy = :openBy'))->buildQuery();
+        $result = $this->db->prepare($query);
+        $result->execute(array(':openBy' => $idUser));
+        return $result->fetch();
+    }
+    
     /**
      * 
      * @param int $idUser
-     * @return array
+     * @return array Associative array of databes value
      */
     public function loadTicketsAssignedTo($idUser) {
+        $query = $this->select()
+                        ->from(array($this->table))
+                        ->where(array('assignedTo = :assignedTo'))->buildQuery();
+        $result = $this->db->prepare($query);
+        $result->execute(array(':assignedTo' => $idUser));
+        return $result->fetch();
         /* $query = $this->db->select()
           ->from($this->table_name)
           ->where('assignedTo', $idUser);
@@ -93,8 +115,8 @@ class TicketsModel extends BaseModel {
     }
 
     /**
-     * 
-     * @return type
+     * Load list of ticket
+     * @return array Associative array of databes value
      */
     public function loadTicketTypes() {
         $query = $this->select()->from(array('tickettype'))->buildQuery();
@@ -104,8 +126,8 @@ class TicketsModel extends BaseModel {
     }
 
     /**
-     * 
-     * @return type
+     * Load list of project type list
+     * @return array Associative array of databes value
      */
     public function loadProjectList() {
         $query = $this->select()->from(array('project'))->buildQuery();
@@ -115,8 +137,8 @@ class TicketsModel extends BaseModel {
     }
 
     /**
-     * 
-     * @return type
+     * * Load list of member
+     * @return array Associative array of databes value
      */
     public function loadMemberList() {
         $query = $this->select(array('idUser', 'firstname', 'lastname', 'roles'))
@@ -127,6 +149,11 @@ class TicketsModel extends BaseModel {
         return $result->fetchAll();
     }
 
+    /**
+     * Change the status of a ticket to close
+     * @param int $idTicket The id of ticket in database
+     * @return boolean TRUE on succes, else FALSE
+     */
     public function closeTicket($idTicket) {
         if ($idTicket != null && is_numeric($idTicket)) {
             $now = new \DateTime();
@@ -145,31 +172,42 @@ class TicketsModel extends BaseModel {
             return $result;
         }
     }
-    
+
+    /**
+     * save ticket after edition
+     * @param array $data associative array of data
+     * @param type $idTicket the id of ticket where to save
+     * @return boolean TRUE on succes, else FALSE
+     */
     public function saveTicket($data, $idTicket) {
-            $sql = 'UPDATE ';
-            $sql .= $this->table;
-            $sql .= ' SET ';
-            foreach ($data as $key => $value) {
-                $sql .= $key.' = :'.$key.', ';
-            }
-            $columns = array_keys($data);
-            foreach ($columns as $column) {
-                if ($column != $this->primaryKey) {
-                    $sql .= $column . ' = :' . $column;
-                    if (end($columns) != $column) {
-                        $sql .= ', ';
-                    }
+        $sql = 'UPDATE ';
+        $sql .= $this->table;
+        $sql .= ' SET ';
+        foreach ($data as $key => $value) {
+            $sql .= $key . ' = :' . $key . ', ';
+        }
+        $columns = array_keys($data);
+        foreach ($columns as $column) {
+            if ($column != $this->primaryKey) {
+                $sql .= $column . ' = :' . $column;
+                if (end($columns) != $column) {
+                    $sql .= ', ';
                 }
             }
-            $sql .= ' WHERE idTicket = ' . $idTicket;
-            $this->db->exec('SET foreign_key_checks = 0');
-            $insert = $this->db->prepare($sql);
-            $result = $insert->execute($data);
-            $this->db->exec('SET foreign_key_checks = 1');
-            return $result;
+        }
+        $sql .= ' WHERE idTicket = ' . $idTicket;
+        $this->db->exec('SET foreign_key_checks = 0');
+        $insert = $this->db->prepare($sql);
+        $result = $insert->execute($data);
+        $this->db->exec('SET foreign_key_checks = 1');
+        return $result;
     }
 
+    /**
+     * Change state of ticket from close to re-open
+     * @param int $idTicket The ID of the ticket to re-open
+     * @return boolean TRUE on succes, else FALSE
+     */
     public function reopenTicket($idTicket) {
         if ($idTicket != null && is_numeric($idTicket)) {
             $sql = 'UPDATE ';
@@ -188,6 +226,11 @@ class TicketsModel extends BaseModel {
         }
     }
 
+    /**
+     * Insert ticket data in data bases
+     * @param array $data associative array of data
+     * @return boolean TRUE on succes, else FALSE
+     */
     public function createTicket($data) {
         $sql = 'INSERT INTO ';
         $sql .= $this->table;
@@ -199,9 +242,8 @@ class TicketsModel extends BaseModel {
     }
 
     /**
-     * 
-     * @param type $offset
-     * @param type $limit
+     * Count number of ticket registered in database
+     * @return int The  number of ticket find in database
      */
     public function countAllTickets() {
         $query = $this->select(array('COUNT(*)'))
@@ -212,42 +254,58 @@ class TicketsModel extends BaseModel {
         return $result->fetchColumn();
     }
 
+    /**
+     * Get the last id in databases
+     * @return array Associative array of database value
+     */
     public function getLastId() {
         $query = $this->select(array('idTicket'))
                         ->from(array($this->table))
                         ->orderBy(array('idTicket'), 'DESC')
-                        ->limit(0, 1)->buildQuery(); //SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+                        ->limit(0, 1)->buildQuery();
         $result = $this->db->query($query);
         return $result->fetch();
     }
 
+    /**
+     * Get the first id in databases
+     * @return array Associative array of database value
+     */
     public function getFirstId() {
         $query = $this->select(array('idTicket'))
                         ->from(array($this->table))
                         ->orderBy(array('idTicket'))
-                        ->limit(0, 1)->buildQuery(); //SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+                        ->limit(0, 1)->buildQuery();
         $result = $this->db->query($query);
         return $result->fetch();
     }
 
+    /**
+     * Get the previous id in databases from current
+     * @param int $current the current id
+     * @return array Associative array of database value
+     */
     public function getPreviousId($current) {
         $query = $this->select(array('idTicket'))
                         ->from(array($this->table))
                         ->where(array('idTicket' . ' < :idTicket'))
                         ->orderBy(array('idTicket'), 'DESC')
-                        ->limit(0, 1)->buildQuery(); //SELECT fields FROM table ORDER BY id DESC LIMIT 1;
-
+                        ->limit(0, 1)->buildQuery();
         $result = $this->db->prepare($query);
         $result->execute(array(':idTicket' => $current));
         return $result->fetch();
     }
 
+    /**
+     * Get the next id in databases from current
+     * @param int $current the current id
+     * @return array Associative array of database value
+     */
     public function getNextId($current) {
         $query = $this->select(array('idTicket'))
                         ->from(array($this->table))
                         ->where(array('idTicket' . ' > :idTicket'))
-                        ->limit(0, 1)->buildQuery(); //SELECT fields FROM table ORDER BY id DESC LIMIT 1;
-
+                        ->limit(0, 1)->buildQuery();
         $result = $this->db->prepare($query);
         $result->execute(array(':idTicket' => $current));
         return $result->fetch();

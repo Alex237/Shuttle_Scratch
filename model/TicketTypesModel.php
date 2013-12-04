@@ -7,7 +7,7 @@
  */
 require_once './model/BaseModel.php';
 
-class TicketsModel extends BaseModel {
+class TicketTypesModel extends BaseModel {
 
 	/**
 	 * 

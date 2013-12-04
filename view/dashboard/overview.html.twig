@@ -15,11 +15,11 @@
                             <th>Titre</th>
                             <th>Auteur</th>
                         </tr>
-                        {% for i in 1..4 %}
+                        {% for ticket in ticketList %}
                         <tr>
-                            <td>#{{ i }}</td>
-                            <td><a href="{{ domain() }}tickets/{{ i }}/show">Titre ticket</a></td>
-                            <td><a href="{{ domain() }}user/{{ i }}/show">Auteurs</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show"># {{ ticket.idTicket }}</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.title }}</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ [ticket.lastname|capitalize, ticket.firstname|capitalize]|join(' ') }}</a></td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -57,7 +57,7 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="page-header-min"><b>Mes ticket :</b></div>
-                        <p>Vous avez -- ticket(s) en cours</p>
+                        <p>Vous avez ouvert <b>{{ ticketOpened['COUNT(*)'] }}</b> ticket(s)</p>
                     </div>
                     <div class="col-lg-6">
                         <div class="page-header-min"><b>Tickets traités :</b></div>
