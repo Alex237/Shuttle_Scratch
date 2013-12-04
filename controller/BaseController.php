@@ -31,7 +31,7 @@ abstract class BaseController
      * @var \Session
      */
     protected $session;
-    
+
     /**
      * The form validator
      * 
@@ -160,7 +160,7 @@ abstract class BaseController
      * 2/ Update the Twig environment
      * 
      * @param string $message The alert message
-     * @param string $type The alert type
+     * @param string $type The alert type 
      * @return void
      */
     protected function alert($message, $type = 'info') {
@@ -174,44 +174,44 @@ abstract class BaseController
      */
     private function extend() {
         $functions[] = new Twig_SimpleFunction('setValue', function ($input, $default = null) {
-                    if (isset($_POST[$input])) {
-                        echo $_POST[$input];
-                    } elseif (!is_null($default)) {
-                        echo $default;
-                    }
-                });
+            if (isset($_POST[$input])) {
+                echo $_POST[$input];
+            } elseif (!is_null($default)) {
+                echo $default;
+            }
+        });
 
         $functions[] = new Twig_SimpleFunction('domain', function () {
-                    echo 'http://' . $_SERVER['SERVER_NAME'] . '/';
-                });
+            echo 'http://' . $_SERVER['SERVER_NAME'] . '/';
+        });
 
         $functions[] = new Twig_SimpleFunction('formError', function ($field, $html = true) {
-                    if ($this->validator instanceof \Validator) {
-                        if (($message = $this->validator->getError($field)) != FALSE) {
-                            if ($html) {
-                                echo '<div class="input-error">' . $message . '</div>';
-                            } else {
-                                echo $message;
-                            }
-                        }
+            if ($this->validator instanceof \Validator) {
+                if (($message = $this->validator->getError($field)) != FALSE) {
+                    if ($html) {
+                        echo '<div class="input-error">' . $message . '</div>';
+                    } else {
+                        echo $message;
                     }
-                });
+                }
+            }
+        });
 
         $functions[] = new Twig_SimpleFunction('hasError', function ($field) {
-                    if ($this->validator instanceof \Validator) {
-                        return $this->validator->hasError($field);
-                    }
-                });
+            if ($this->validator instanceof \Validator) {
+                return $this->validator->hasError($field);
+            }
+        });
 
         $functions[] = new Twig_SimpleFunction('set_select', function($select, $value, $default = false) {
-                    if ((isset($_POST[$select]) and $_POST[$select] == $value) or $default) {
-                        echo 'selected="selected"';
-                    }
-                });
+            if ((isset($_POST[$select]) and $_POST[$select] == $value) or $default) {
+                echo 'selected="selected"';
+            }
+        });
 
         $functions[] = new Twig_SimpleFunction('isGranted', function($role = null) {
-                    return $this->session->isGranted($role);
-                });
+            return $this->session->isGranted($role);
+        });
 
         foreach ($functions as $function) {
             $this->twig->addFunction($function);

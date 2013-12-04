@@ -7,7 +7,8 @@ require_once './controller/BaseController.php';
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
-class Tickets extends BaseController {
+class Tickets extends BaseController
+{
 
     /**
      * Constructor

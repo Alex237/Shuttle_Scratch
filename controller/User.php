@@ -158,9 +158,13 @@ class User extends BaseController
 
         $this->restrict('admin');
         $this->model->init();
-        $this->model->deleteById($idUser);
-        $this->model->close();
-        $this->redirect('/user');
+        if ($this->model->deleteById($idUser)) {
+            $this->session->addFlash('Utilisateur désactivé', 'success');
+            $this->redirect('/user');
+        } else {
+            $this->session->addFlash('Impossible de supprimer cet utilisateur', 'danger');
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        }
     }
 
     /**

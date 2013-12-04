@@ -69,12 +69,22 @@ class Session
     }
 
     /**
-     * Return The session user data
+     * Return the session userdatas
      * 
      * @return array
      */
     public function getUserData() {
         return unserialize($_SESSION['userdata']);
+    }
+
+    /**
+     * Return the current logged user id
+     * 
+     * @return int
+     */
+    public function getUserId() {
+        $userdata = unserialize($_SESSION['userdata']);
+        return (int) $userdata['idUser'];
     }
 
     /**
@@ -106,7 +116,7 @@ class Session
 
             if ($role != null) {
                 $roles = $this->userdata['roles'];
-                if(empty($roles)) {
+                if (empty($roles)) {
                     return FALSE;
                 } else {
                     return in_array($role, $roles);

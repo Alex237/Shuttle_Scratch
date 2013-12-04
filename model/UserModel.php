@@ -11,6 +11,10 @@ require_once './model/BaseModel.php';
 class UserModel extends BaseModel
 {
 
+    const PENDING_STATE = 0;
+    const ACTIVE_STATE = 1;
+    const DELETE_STATE = 2;
+
     /**
      * Contruct
      * 
@@ -45,16 +49,28 @@ class UserModel extends BaseModel
                 ->where(array('email = :email', 'token = :token', 'state = :state'))
                 ->buildQuery();
         $auth = $this->db->prepare($sql);
-        $auth->execute(array(':email' => $email, ':token' => $token, ':state' => 0));
+        $auth->execute(array(':email' => $email, ':token' => $token, ':state' => self::ACTIVE_STATE));
 
         $user = $auth->fetch();
 
         if (!empty($user)) {
-            $user['state'] = 1;
+            $user['state'] = self::ACTIVE_STATE;
             return $this->save($user);
         } else {
             return FALSE;
         }
+    }
+
+    /**
+     * 
+     * 
+     * @param type $idUser
+     * @return type
+     */
+    public function deleteById($idUser) {
+        $sql = 'UPDATE ' . $this->table . ' SET state = :state WHERE ' . $this->primaryKey . ' = :idUser';
+        $deleteById = $this->db->prepare($sql);
+        return $deleteById->execute(array(':idUser' => $idUser, ':state' => self::DELETE_STATE));
     }
 
     /**

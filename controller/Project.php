@@ -59,12 +59,14 @@ class Project extends BaseController
                     $project = array(
                         'name' => $_POST['name'],
                         'createDate' => $now->format('Y-m-d H:i:s'),
+                        'createdBy' => $this->session->getUserId(),
+                        'content' => $_POST['content'],
                         'deadline' => implode('-', array_reverse(explode('/', $_POST['deadline'])))
                     );
 
                     if ($this->model->save($project)) {
 
-                        $this->session->addFlash('Projet Crée', 'success');
+                        $this->session->addFlash('Projet crée', 'success');
                         $this->redirect('/project');
                     } else {
 
@@ -79,8 +81,17 @@ class Project extends BaseController
         $this->twig->display('project/add.html.twig');
     }
 
-    public function delete($id) {
-        
+    public function delete($idProject) {
+
+        $this->restrict('admin');
+        $this->model->init();
+        if ($this->model->deleteById($idProject)) {
+            $this->session->addFlash('Projet supprimé', 'success');
+            $this->redirect('/project');
+        } else {
+            $this->session->addFlash('Impossible de supprimer le projet', 'danger');
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        }
     }
 
     public function edit($id) {

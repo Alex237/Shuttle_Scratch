@@ -28,7 +28,7 @@ CREATE  TABLE IF NOT EXISTS `shuttle`.`user` (
   `roles` TEXT NULL DEFAULT NULL ,
   `registerDate` DATETIME NULL DEFAULT NULL ,
   `lastLoginDate` DATETIME NULL DEFAULT NULL ,
-  `state` INT(11) NOT NULL DEFAULT '0' ,
+  `state` INT(11) NOT NULL DEFAULT 0 ,
   `token` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`idUser`) ,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) )
@@ -159,6 +159,31 @@ CREATE  TABLE IF NOT EXISTS `shuttle`.`token` (
   CONSTRAINT `fk_token_user1`
     FOREIGN KEY (`user` )
     REFERENCES `shuttle`.`user` (`idUser` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shuttle`.`message`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `shuttle`.`message` (
+  `idMessage` INT NOT NULL AUTO_INCREMENT ,
+  `content` TEXT NULL ,
+  `createDate` DATETIME NOT NULL ,
+  `createdBy` INT(11) NOT NULL ,
+  `ticket` INT(11) NOT NULL ,
+  PRIMARY KEY (`idMessage`) ,
+  INDEX `fk_message_user1_idx` (`createdBy` ASC) ,
+  INDEX `fk_message_ticket1_idx` (`ticket` ASC) ,
+  CONSTRAINT `fk_message_user1`
+    FOREIGN KEY (`createdBy` )
+    REFERENCES `shuttle`.`user` (`idUser` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_message_ticket1`
+    FOREIGN KEY (`ticket` )
+    REFERENCES `shuttle`.`ticket` (`idTicket` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

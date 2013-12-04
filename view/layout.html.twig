@@ -43,7 +43,7 @@
                             <li{% if navtab == 'overview' %} class="active"{% endif %}><a href="{{ domain() }}dashboard"><i class="fa-eye"></i>Accueil</a></li>
                             <li{% if navtab == 'history' %} class="active"{% endif %}><a href="{{ domain() }}history"><i class="fa-clock-o"></i>Historique</a></li>
                             <li{% if navtab == 'ticket' %} class="active"{% endif %}><a href="{{ domain() }}tickets"><i class="fa-ticket"></i>Tickets</a></li>
-                            <li{% if navtab == 'project' %} class="active"{% endif %}><a href="{{ domain() }}project"><i class="fa-folder-o"></i>Projets</a></li>
+                            <li{% if navtab == 'project' %} class="active"{% endif %}><a href="{{ domain() }}project"><i class="fa-folder-open"></i>Projets</a></li>
                             {% if isGranted('team') %}<li{% if navtab == 'user' %} class="active"{% endif %}><a href="{{ domain() }}user"><i class="fa-group"></i>Utilisateurs</a></li>{% endif %}
                             <li{% if navtab == 'stat' %} class="active"{% endif %}><a href="{{ domain() }}stat"><i class="fa-bar-chart-o"></i>Statistiques</a></li>
                             <li{% if navtab == 'newTicket' %} class="active"{% endif %}><a href="{{ domain() }}tickets/add"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>

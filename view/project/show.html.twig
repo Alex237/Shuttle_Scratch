@@ -25,15 +25,15 @@
                         {% for ticket in tickets %}
                         <tr>
                             <td><input type="checkbox"></td>
-                            <td><a href="{{ domain() }}ticket/{{ ticket.idTicket }}/show">{{ ticket.idTicket }}</a></td>
-                            <td><a href="{{ domain() }}ticket/{{ ticket.idTicket }}/show">{{ ticket.title }}</a></td>
-                            <td><a href="{{ domain() }}ticket/{{ ticket.idTicket }}/show">{{ ticket.lastname ~ ticket.firstname }}</a></td>
-                            <td><a href="{{ domain() }}ticket/{{ ticket.idTicket }}/show">{{ ticket.statusLabel }}</a></td>
-                            <td><a href="{{ domain() }}ticket/{{ ticket.idTicket }}/show">{{ ticket.assignedToFirstname ~ ticket.assignedToLastname }}</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.idTicket }}</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.title }}</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.lastname ~ ticket.firstname }}</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.statusLabel }}</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.assignedToFirstname ~ ticket.assignedToLastname }}</a></td>
                             <td>
-                                <a href="{{ domain() }}ticket/{{ ticket.idTicket }}/show"><i class="fa-eye"></i></a> 
-                                <a href="{{ domain() }}ticket/{{ ticket.idTicket }}/edit"><i class="fa-edit"></i></a>
-                                <a href="{{ domain() }}ticket/{{ ticket.idTicket }}/delete"><i class="fa-times"></i></a>
+                                <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show"><i class="fa-eye"></i></a> 
+                                <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/edit"><i class="fa-edit"></i></a>
+                                <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/delete"><i class="fa-times"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -45,7 +45,7 @@
             </section>
         </div>
         <div class="col-md-3">
-            <a class="btn btn-lg btn-block btn-primary" href="{{ domain() }}ticket/add/{{ project.idProject }}">Ouvrir un Ticket</a>
+            <a class="btn btn-lg btn-block btn-primary" href="{{ domain() }}tickets/add/{{ project.idProject }}">Ouvrir un Ticket</a>
             <a class="btn btn-lg btn-block btn-warning" href="{{ domain() }}project/{{ project.idProject }}/edit">Modifier</a>
             <a class="btn btn-lg btn-block btn-danger" href="{{ domain() }}project/{{ project.idProject }}/delete">Supprimer</a>
         </div>
