@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-9">
             {% if nextTicket != null %}
             <div class="pull-right">
                 <a href="{{ domain() }}tickets/{{ nextTicket.idTicket }}/show" class="btn btn-primary btn-lg">
@@ -23,7 +23,7 @@
     </div>
     <br >
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-9">
             <section class="well">
                 <h3> 
                     #{{ ticket.idTicket }} - {{ ticket.title }} 
@@ -127,12 +127,63 @@
                         <div class="form-group col-md-4">
                             <label for="estimatedTime">Temps estimé</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="estimatedTime" value="{{ticket.estimatedTime}}" name="estimatedTime" disabled="true">
+                                <input type="text" class="form-control" id="estimatedTime" value="{{ ticket.estimatedTime}}" name="estimatedTime" disabled="true">
                                 <span class="input-group-addon">Jours</span>
                             </div>
                         </div>
                     </div>
                 </fielset>
+
+                <br>
+                <h3>Commentaires</h3>
+                <br>
+                
+                {% for message in messages %}
+                <p>Réponse de {{ message.firstname ~ message.lastname }} &lt;{{ message.email }}&gt;
+                    <span class="pull-right">{{ message.createDate|date('l, d F Y - H:i:s') }}</span>
+                </p>
+                
+                {% if message.changes %}
+                <ul>
+                {% for change in json_decode(message.changes) %}
+                    <li>{{ change.field }} changé de {{ change.from }} à {{ change.to }}</li>
+                {% endfor%}
+                </ul>
+                {% endif %}
+                
+                <blockquote>{{ message.content }}</blockquote>
+                <hr>
+                {% else %}
+                <div class="alert alert-warning">Aucune réponse pour ce ticket</div>
+                {% endfor %}
+            </section>
+        </div>
+        <div class="col-md-3">
+            <section class="well">
+                <h3>Répondre à ce Ticket</h3>
+                <form action="{{ domain() }}tickets/{{ ticket.idTicket }}/response" method="POST">
+                    <input type="hidden" value="{{ ticket.idTicket }}" name="idTicket">
+                    <div class="form-group">
+                        <label for="status">Statut</label>
+                        <select class="form-control" id="status" name="status">
+                            <option value="">Choisir un status</option>
+                            <option value="1">Nouveau</option>
+                            <option value="2">Résolu</option>
+                            <option value="3">Invalide</option>
+                            <option value="4">Non pris en compte</option>
+                            <option value="5">Existe déjà</option>
+                            <option value="6">Fonctionnel</option>
+                            <option value="7">Ne peut être résolu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Réponse</label>
+                        <textarea class="form-control" id="content" name="content" rows="12">{{ setValue('content') }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-primary" type="submit">Répondre</button>
+                    </div>
+                </form>
             </section>
         </div>
     </div>

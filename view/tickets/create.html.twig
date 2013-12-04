@@ -25,7 +25,7 @@
                             </select>
                             {{ formError('type') }}
                         </div>
-						{% if isGranted('admin') or isGranted('team') %}
+                        {% if isGranted('admin') or isGranted('team') %}
                         <div class="form-group col-md-2">
                             <label for="level"><b>Importance</b></label>
                             <select class="form-control" id="level" name="level" {{ setValue('level') }}>
@@ -38,36 +38,36 @@
                         </div>
                         {% else %}
                         <input type="hidden" name="level" value="3" />
-						{% endif %}
+                        {% endif %}
                     </div>
                     <div class="form-group">
                         <label for="content"><b>Détail</b></label>
                         <textarea class="form-control" id="content" name="detail" rows="12" {{ setValue('detail') }}></textarea>
-						{{ formError('detail') }}
+                        {{ formError('detail') }}
                     </div>
-					{% if isGranted('admin') or isGranted('team') %}
+                    {% if isGranted('admin') or isGranted('team') %}
                     <fielset>
                         <legend>Temporalité</legend>
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="startDate">Date de debut</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="startDate" name="startDate" {{ setValue('startDate') }} />
+                                    <input type="text" class="form-control" id="startDate" name="startDate" data-date-format="dd/mm/yyyy" {{ setValue('startDate') }} />
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" id="startDateBtn"><i class="fa-calendar-o"></i></button>
                                     </span>
                                 </div>
-								{{ formError('startDate') }}
+                                {{ formError('startDate') }}
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="deadline"><b>Date de fin</b></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="deadline" name="deadline" {{ setValue('deadline') }}/>
+                                    <input type="text" class="form-control" id="deadline" name="deadline" data-date-format="dd/mm/yyyy" {{ setValue('deadline') }}/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" id="deadlineBtn"><i class="fa-calendar-o"></i></button>
                                     </span>
                                 </div>
-								{{ formError('startDate') }}
+                                {{ formError('startDate') }}
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="estimatedTime"><b>Temps estimé</b></label>
@@ -78,48 +78,44 @@
                             </div>
                         </div>
                     </fielset>
-					{% endif %}
+                    {% endif %}
                     <button type="submit" class="btn btn-primary">{% if isGranted('admin') or isGranted('team') %} Ajouter {% else %} Soumettre {% endif %}</button>
                 </section>
             </div>
-			{% if isGranted('admin') or isGranted('team') %}
+            {% if isGranted('admin') or isGranted('team') %}
             <div class="col-md-3">
                 <section class="well">
                     <h3><b>Projet</b></h3>
                     <label for="type"><b>Projet associé</b></label>
                     <select class="form-control" id="type" name="idProjet" {{ setValue('idProjet') }}>
                         <option value="0">Choisir un projet</option>
-						{% for projet in projets %}
+                        {% for projet in projets %}
                         <option value="{{ projet.idProject }}" {{ set_select('idProjet', projet.idProject, idProject == projet.idProject) }}>{{ projet.name|capitalize }}</option>
-						{% endfor %}
+                        {% endfor %}
                     </select>
-					{{ formError('idProjet') }}
+                    {{ formError('idProjet') }}
                 </section>
 
                 <section class="well">
                     <h3><b>Equipe</b></h3>
                     <div class="form-group">
-                        <label for="exampleInputPassword1"><b>Assigné à</b></label>
-                        <select class="form-control" id="exampleInputPassword1" name="assignedTo" {{ setValue('assignedTo') }}>
-                            <option value="0">Choisir un membre d'équipe</option>
-							{% for teamMember in teams %}
-                            <option value="{{ teamMember.idUser }}" {{ set_select('assignedTo', teamMember.idUser) }}>{{ [teamMember.lastname|capitalize, teamMember.firstname|capitalize]|join(' ') }}</option>
-							{% endfor %}
+                        <label for="assignedTo"><b>Assigné à</b></label>
+                        <select class="form-control" id="assignedTo" name="assignedTo" {{ setValue('assignedTo') }}>
+                            <option value="">Choisir un membre d'équipe</option>
+                            {% for teamMember in teams %}
+                            <option value="{{ teamMember.idUser }}" {{ set_select('assignedTo', teamMember.idUser) }}>{{ teamMember.lastname ~ teamMember.firstname }}</option>
+                            {% endfor %}
                         </select>
-						{{ formError('assignedTo') }}
+                        {{ formError('assignedTo') }}
                     </div>
                 </section>
                 <section class="well">	
                     <h3><b> Status :</b></h3>
-                    <select class="form-control" id="statusCange" name="statusCange">
+                    <select class="form-control" id="status" name="status">
                         <option value="">Choisir un status</option>
-                        <option selected="selected" value="1">Nouveau</option>
-                        <option value="2">Résolu</option>
-                        <option value="3">Invalide</option>
-                        <option value="4">Non pris en compte</option>
-                        <option value="5">Existe déjà</option>
-                        <option value="6">Fonctionnel</option>
-                        <option value="7">Ne peut être résolu</option>
+                        {% for status in statuses %}
+                        <option value="{{ status.idStatus }}" {{ set_select('status', status.idStatus) }}>{{ status.statusLabel }}</option>
+                        {% endfor %}
                     </select>
                 </section>
             </div>

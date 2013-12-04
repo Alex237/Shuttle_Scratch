@@ -7,7 +7,8 @@
  */
 require_once './model/BaseModel.php';
 
-class TicketsModel extends BaseModel {
+class TicketsModel extends BaseModel
+{
 
     /**
      * Constructor
@@ -47,21 +48,23 @@ class TicketsModel extends BaseModel {
      * @param string $columns not use in This Model
      * @return array Associative array of databes value
      */
-    public function loadById($id, $columns = null) {
+    public function loadByIdJoined($idTicket) {
         $query = $this->select(array(
-                            $this->table . '.*',
-                            'u.*',
-                            'tt.*',
-                            'ts.*',
-                            'u2.firstname as assignedToFirstname',
-                            'u2.lastname as assignedToLastname'
-                        ))
-                        ->from(array($this->table))
-                        ->join('user u', 'u.idUser = ' . $this->table . '.openBy')
-                        ->join('tickettype tt', 'tt.idTicketType = ' . $this->table . '.type')
-                        ->join('ticketstatus ts', 'ts.idStatus = ' . $this->table . '.status')
-                        ->join('user u2', 'u2.idUser = ' . $this->table . '.assignedTo')
-                        ->where(array($this->primaryKey . ' = :idTicket'))->buildQuery();
+                    $this->table . '.*',
+                    'u.*',
+                    'tt.*',
+                    'ts.*',
+                    'u2.firstname as assignedToFirstname',
+                    'u2.lastname as assignedToLastname',
+                    'u2.email as assignedToEmail'
+                ))
+                ->from(array($this->table))
+                ->join('user u', 'u.idUser = ' . $this->table . '.openBy')
+                ->join('tickettype tt', 'tt.idTicketType = ' . $this->table . '.type')
+                ->join('ticketstatus ts', 'ts.idStatus = ' . $this->table . '.status')
+                ->join('user u2', 'u2.idUser = ' . $this->table . '.assignedTo')
+                ->where(array($this->primaryKey . ' = :idTicket'))
+                ->buildQuery();
         $result = $this->db->prepare($query);
         $result->execute(array(':idTicket' => $id));
         return $result->fetch();
@@ -74,13 +77,14 @@ class TicketsModel extends BaseModel {
      */
     public function loadTicketsOpenBy($idUser) {
         $query = $this->select()
-                        ->from(array($this->table))
-                        ->where(array('openBy = :openBy'))->buildQuery();
+                ->from(array($this->table))
+                ->where(array('openBy = :openBy'))
+                ->buildQuery();
         $result = $this->db->prepare($query);
         $result->execute(array(':openBy' => $idUser));
         return $result->fetch();
     }
-    
+
     /**
      * Load ticket open by an user
      * @param int $idUser the id User
@@ -88,13 +92,14 @@ class TicketsModel extends BaseModel {
      */
     public function countTicketsOpenBy($idUser) {
         $query = $this->select(array('COUNT(*)'))
-                        ->from(array($this->table))
-                        ->where(array('openBy = :openBy'))->buildQuery();
+                ->from(array($this->table))
+                ->where(array('openBy = :openBy'))
+                ->buildQuery();
         $result = $this->db->prepare($query);
         $result->execute(array(':openBy' => $idUser));
         return $result->fetch();
     }
-    
+
     /**
      * 
      * @param int $idUser
@@ -102,8 +107,9 @@ class TicketsModel extends BaseModel {
      */
     public function loadTicketsAssignedTo($idUser) {
         $query = $this->select()
-                        ->from(array($this->table))
-                        ->where(array('assignedTo = :assignedTo'))->buildQuery();
+                ->from(array($this->table))
+                ->where(array('assignedTo = :assignedTo'))
+                ->buildQuery();
         $result = $this->db->prepare($query);
         $result->execute(array(':assignedTo' => $idUser));
         return $result->fetch();
@@ -119,9 +125,23 @@ class TicketsModel extends BaseModel {
      * @return array Associative array of databes value
      */
     public function loadTicketTypes() {
-        $query = $this->select()->from(array('tickettype'))->buildQuery();
+        $query = $this->select()
+                ->from(array('tickettype'))
+                ->buildQuery();
         $result = $this->db->prepare($query);
         $result->execute();
+        return $result->fetchAll();
+    }
+
+    /**
+     * Load list of status
+     * @return array Associative array of databes value
+     */
+    public function loadStatusList() {
+        $query = $this->select()
+                ->from(array('ticketstatus'))
+                ->buildQuery();
+        $result = $this->db->query($query);
         return $result->fetchAll();
     }
 
@@ -130,7 +150,9 @@ class TicketsModel extends BaseModel {
      * @return array Associative array of databes value
      */
     public function loadProjectList() {
-        $query = $this->select()->from(array('project'))->buildQuery();
+        $query = $this->select()
+                ->from(array('project'))
+                ->buildQuery();
         $result = $this->db->prepare($query);
         $result->execute();
         return $result->fetchAll();
@@ -309,6 +331,53 @@ class TicketsModel extends BaseModel {
         $result = $this->db->prepare($query);
         $result->execute(array(':idTicket' => $current));
         return $result->fetch();
+    }
+
+    /**
+     * 
+     * 
+     * @param type $idTicket
+     * @return type
+     */
+    public function getTicketMessages($idTicket) {
+        $sql = $this->select()
+                ->from(array('message'))
+                ->join('user', 'user.idUser = message.createdBy')
+                ->where(array('ticket = :idTicket'))
+                ->orderBy(array('createdDate'), 'DESC')
+                ->buildQuery();
+        $getTicketMessages = $this->db->prepare($sql);
+        $getTicketMessages->execute(array(':idTicket' => $idTicket));
+
+        return $getTicketMessages->fetchAll();
+    }
+
+    /**
+     * 
+     * 
+     * @param type $message
+     * @param type $ticket
+     */
+    public function response($message, $ticket) {
+
+        $this->db->beginTransaction();
+
+        try {
+            $this->db->exec('SET foreign_key_checks = 0');
+            $this->save($ticket);
+
+            $message['changes'] = json_encode($message['changes']);
+            $this->save($message, 'message', 'idMessage');
+
+            $this->db->exec('SET foreign_key_checks = 1');
+            return $this->db->commit();
+        } catch (Exception $ex) {
+
+            var_dump($ex);
+
+            $this->db->rollBack();
+            return FALSE;
+        }
     }
 
 }

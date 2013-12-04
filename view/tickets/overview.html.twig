@@ -57,9 +57,9 @@
                         <tr>
                             <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">#{{ ticket.idTicket }}</a></td>
                             <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.title }}</a></td>
-                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ [ticket.lastname|capitalize, ticket.firstname|capitalize]|join(' ') }}</a></td>
+                            <td><a href="{{ domain() }}user/{{ ticket.idUser }}/show">{{ ticket.lastname ~ ' ' ~ ticket.firstname }} &lt;{{ ticket.email }}&gt;</a></td>
                             <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.statusLabel}}</a></td>
-                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ [ticket.assignedToFirstname|capitalize, ticket.assignedToLastname|capitalize]|join(' ') }}</a></td>
+                            <td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.assignedToFirstname ~ ' ' ~ ticket.assignedToLastname }}</a></td>
                             <td>
                                 <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show"><i class="fa-eye"></i></a> 
                                 <a href="{{ domain() }}tickets/{{ ticket.idTicket }}/edit"><i class="fa-edit"></i></a>

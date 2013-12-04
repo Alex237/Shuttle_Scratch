@@ -145,23 +145,25 @@ abstract class BaseModel
      * @param type $data
      * @param type $table
      */
-    public function save($data, $table = null) {
+    public function save($data, $table = null, $primaryKey = null) {
 
-        if (in_array($this->primaryKey, array_keys($data))) {
+        $primaryKey = $primaryKey != null ? $primaryKey : $this->primaryKey;
+
+        if (in_array($primaryKey, array_keys($data))) {
             $sql = 'UPDATE ';
             $sql .= $table != null ? $table : $this->table;
             $sql .= ' SET ';
 
             $columns = array_keys($data);
             foreach ($columns as $column) {
-                if ($column != $this->primaryKey) {
+                if ($column != $primaryKey) {
                     $sql .= $column . ' = :' . $column;
                     if (end($columns) != $column) {
                         $sql .= ', ';
                     }
                 }
             }
-            $sql .= ' WHERE ' . $this->primaryKey . ' = :' . $this->primaryKey;
+            $sql .= ' WHERE ' . $primaryKey . ' = :' . $primaryKey;
         } else {
             $sql = 'INSERT INTO ';
             $sql .= $table != null ? $table : $this->table;
@@ -210,7 +212,7 @@ abstract class BaseModel
 
         $sql .= $this->query['orderBy'] . $this->query['limit'];
         $this->flush();
-        
+
         return (string) $sql;
     }
 
@@ -314,9 +316,9 @@ abstract class BaseModel
             $this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
         }
 
-		if ($limit > 0 and $offset >= 0) {
-			$this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
-		}
+        if ($limit > 0 and $offset >= 0) {
+            $this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
+        }
         return $this;
     }
 

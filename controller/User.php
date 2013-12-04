@@ -328,4 +328,50 @@ class User extends BaseController
         
     }
 
+    /**
+     * Display user profile and settings
+     * 
+     */
+    public function profile() {
+
+        $this->model->init();
+        $user = $this->model->loadById($this->session->getUserId());
+
+        // test d'égalité uri<->form pour plus de sécurité
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idUser'] == $user['idUser']) {
+
+            $this->validator = new Validator();
+            $this->validator->addRules('firstname', 'maxlength[45]')
+                    ->addRules('lastname', 'maxlength[45]')
+                    ->addRules('newpassword', 'maxlength[24]')
+                    ->addRules('confirm', 'match[password]');
+
+            if ($this->validator->run()) {
+
+                $user['firstname'] = ucwords(strtolower($_POST['firstname']));
+                $user['lastname'] = strtoupper($_POST['lastname']);
+
+                if (!empty($_POST['newpassword'])) {
+                    $password = md5($_POST['password'] . $user['email']);
+
+                    if ($this->model->authentificate($user['email'], $password)) {
+                        $user['password'] = md5($_POST['newpassword'] . $user['email']);
+                    } else {
+                        $this->alert('Mot de passe incorrect', 'danger');
+                    }
+                }
+
+                if ($this->model->save($user)) {
+                    $this->alert('Votre profil à été mis à jour', 'success');
+                } else {
+                    $this->alert('Impossible de sauvegarder les changements', 'danger');
+                }
+            }
+        }
+
+        $this->twig->display('user/profile.html.twig', array(
+            'user' => $user
+        ));
+    }
+
 }

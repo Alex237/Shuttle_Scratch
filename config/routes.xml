@@ -26,6 +26,7 @@
     <route pattern="/tickets/add(?:/(\d+))?" controller="tickets" action="add" params="id" />
     <route pattern="/tickets/create" controller="tickets" action="add"/>
     <route pattern="/tickets/(\d+)/show" controller="tickets" action="show" params="id" />
+    <route pattern="/tickets/(\d+)/response" controller="tickets" action="response" params="id" />
     <route pattern="/tickets/(\d+)/edit" controller="tickets" action="edit" params="id" />
     <route pattern="/tickets/(\d+)/delete" controller="tickets" action="delete" params="id" />
     <route pattern="/tickets/(\d+)/close" controller="tickets" action="close" params="id" />
@@ -44,5 +45,5 @@
     <route pattern="/stat" controller="stats" action="index"/>
     <route pattern="/stat/(\d+)/show" controller="stats" action="show" params="id" />
         
-    <route pattern="/settings" controller="settings" action="index" params="id" />
+    <route pattern="/settings" controller="user" action="profile" />
 </routes>

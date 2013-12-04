@@ -213,6 +213,10 @@ abstract class BaseController
             return $this->session->isGranted($role);
         });
 
+        $functions[] = new Twig_SimpleFunction('json_decode', function($json) {
+            return (array) json_decode($json);
+        });
+
         foreach ($functions as $function) {
             $this->twig->addFunction($function);
         }
